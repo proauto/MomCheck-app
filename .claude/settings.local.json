@@ -1,0 +1,38 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npm create vite@latest:*)",
+      "Bash(npm install)",
+      "Bash(npm install:*)",
+      "Bash(npx tailwindcss init:*)",
+      "Bash(npx tailwindcss:*)",
+      "Bash(mkdir:*)",
+      "Bash(copy:*)",
+      "Bash(cp:*)",
+      "Bash(rm:*)",
+      "Bash(npm run dev:*)",
+      "Bash(npm uninstall:*)",
+      "Bash(cat:*)",
+      "Bash(npm test)",
+      "Bash(node:*)",
+      "Bash(npm test:*)",
+      "Bash(npx tsc:*)",
+      "Bash(npm run build:*)",
+      "Bash(git init:*)",
+      "Bash(git add:*)",
+      "Bash(gh repo create:*)",
+      "Bash(git remote add:*)",
+      "Bash(git branch:*)",
+      "Bash(git remote set-url:*)",
+      "Bash(git push:*)",
+      "Bash(taskkill:*)",
+      "Bash(git commit:*)",
+      "Bash(git rm:*)",
+      "Bash(git reset:*)",
+      "Bash(mv:*)",
+      "Bash(npx vercel:*)"
+    ],
+    "deny": [],
+    "ask": []
+  }
+}

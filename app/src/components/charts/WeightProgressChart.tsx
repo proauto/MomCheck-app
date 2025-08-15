@@ -140,8 +140,6 @@ export const WeightProgressChart: React.FC<WeightProgressChartProps> = ({
             stroke="#3534A7"
             strokeWidth={2}
             fill="url(#areaGradient)"
-            activeDot={false}
-            dot={false}
           />
           <Area
             type="monotone"
@@ -150,8 +148,6 @@ export const WeightProgressChart: React.FC<WeightProgressChartProps> = ({
             strokeWidth={2}
             fill="white"
             fillOpacity={1}
-            activeDot={false}
-            dot={false}
           />
           
           <CartesianGrid 
@@ -168,6 +164,7 @@ export const WeightProgressChart: React.FC<WeightProgressChartProps> = ({
             dataKey="actual"
             stroke="transparent"
             strokeWidth={0}
+            activeDot={false}
             dot={(props) => {
               const { cx, cy, payload } = props;
               // 현재 주차에만 마커 표시

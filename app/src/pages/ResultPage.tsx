@@ -16,7 +16,7 @@ import { calcTargets } from '../domain/targets';
 import { estimateDistribution } from '../domain/distribution';
 import logoImg from '../assets/logo.png';
 import resultIllust from '../assets/result_illust.png';
-import warningIcon from '../assets/warning.png';
+import bookOpenIcon from '../assets/Book_open.png';
 
 export const ResultPage: React.FC = () => {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -211,9 +211,9 @@ export const ResultPage: React.FC = () => {
       <Page title="체중 관리 결과">
         {/* 모바일 레이아웃 (앱 버전) */}
         <div className="min-h-screen bg-gray-50 sm:hidden overflow-x-hidden">
-          {/* 상단 네비게이션 바 - 88px */}
-          <div className="fixed top-0 left-0 right-0 bg-white border-b border-gray-200 z-50" style={{ height: '88px' }}>
-            <div className="flex items-center justify-between h-full px-4">
+          {/* 상단 네비게이션 바 - 66px */}
+          <div className="fixed top-0 left-0 right-0 bg-white border-b border-gray-200 z-50" style={{ height: '66px' }}>
+            <div className="flex items-center h-full px-4">
               {/* 뒤로가기 버튼 */}
               <button
                 onClick={() => window.location.href = '/'}
@@ -224,42 +224,45 @@ export const ResultPage: React.FC = () => {
                 </svg>
               </button>
               
-              {/* 중앙 타이틀 */}
-              <h1 style={{
+              {/* 관리 타이틀 */}
+              <h1 className="ml-2" style={{
                 fontFamily: 'Noto Sans CJK KR',
                 fontWeight: '500',
-                fontSize: '24px',
+                fontSize: '18px',
                 color: '#000000'
               }}>
                 관리
               </h1>
               
-              {/* 주수별 정보 버튼 */}
-              <button
-                onClick={() => window.location.href = '/weekly-info'}
-                className="flex items-center gap-1"
-              >
-                <img src={warningIcon} alt="Warning" className="w-5 h-5" />
-                <span style={{
-                  fontFamily: 'Noto Sans CJK KR',
-                  fontWeight: '500',
-                  fontSize: '24px',
-                  color: '#EC407A'
-                }}>
-                  주수별 정보
-                </span>
-              </button>
+              {/* 오른쪽 영역 - flex-1로 남은 공간 차지 */}
+              <div className="flex-1 flex justify-end">
+                {/* 주수별 정보 버튼 */}
+                <button
+                  onClick={() => window.location.href = '/weekly-info'}
+                  className="flex items-center gap-1 mr-2"
+                >
+                  <img src={bookOpenIcon} alt="Book Open" style={{ width: '18px', height: '18px' }} />
+                  <span style={{
+                    fontFamily: 'Noto Sans CJK KR',
+                    fontWeight: '500',
+                    fontSize: '18px',
+                    color: '#EC407A'
+                  }}>
+                    주수별 정보
+                  </span>
+                </button>
+              </div>
             </div>
           </div>
           
           {isLoading ? (
             /* 앱에서만 로딩 화면 */
-            <div style={{ marginTop: '88px' }}>
+            <div style={{ marginTop: '66px' }}>
               <LoadingSpinner message="결과를 계산하는 중..." />
             </div>
           ) : (
             /* Right Part 컨텐츠를 앱 전체 화면에 맞게 - 스크롤 가능 */
-            <div className="overflow-y-auto overflow-x-hidden" style={{ height: 'calc(100vh - 88px)', marginTop: '88px' }}>
+            <div className="overflow-y-auto overflow-x-hidden" style={{ height: 'calc(100vh - 66px)', marginTop: '66px' }}>
             {activeTab === 'result' ? (
               <div className="space-y-6 p-4">
                 {/* 상태 메시지 (공유 버튼 제거) */}

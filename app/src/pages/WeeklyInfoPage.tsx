@@ -30,9 +30,9 @@ export const WeeklyInfoPage: React.FC = () => {
       <Page title="주수별 맞춤정보">
         {/* 모바일 레이아웃 (앱 버전) */}
         <div className="min-h-screen bg-gray-50 sm:hidden overflow-x-hidden">
-          {/* 상단 네비게이션 바 - 88px */}
-          <div className="fixed top-0 left-0 right-0 bg-white border-b border-gray-200 z-50" style={{ height: '88px' }}>
-            <div className="flex items-center justify-between h-full px-4">
+          {/* 상단 네비게이션 바 - 66px */}
+          <div className="fixed top-0 left-0 right-0 bg-white border-b border-gray-200 z-50" style={{ height: '66px' }}>
+            <div className="flex items-center h-full px-4">
               {/* 뒤로가기 버튼 */}
               <button
                 onClick={() => window.history.back()}
@@ -43,28 +43,25 @@ export const WeeklyInfoPage: React.FC = () => {
                 </svg>
               </button>
               
-              {/* 중앙 타이틀 */}
-              <h1 style={{
+              {/* 주수별 맞춤정보 타이틀 */}
+              <h1 className="ml-2" style={{
                 fontFamily: 'Noto Sans CJK KR',
                 fontWeight: '500',
-                fontSize: '24px',
+                fontSize: '18px',
                 color: '#000000'
               }}>
                 주수별 맞춤정보
               </h1>
-              
-              {/* 빈 공간 (균형을 위해) */}
-              <div className="w-10"></div>
             </div>
           </div>
           
           {isLoading ? (
             /* 앱에서만 로딩 화면 */
-            <div style={{ marginTop: '88px' }}>
+            <div style={{ marginTop: '66px' }}>
               <LoadingSpinner message="주수별 맞춤정보를 불러오는 중..." />
             </div>
           ) : (
-            <div className="overflow-y-auto overflow-x-hidden" style={{ height: 'calc(100vh - 88px)', marginTop: '88px' }}>
+            <div className="overflow-y-auto overflow-x-hidden" style={{ height: 'calc(100vh - 66px)', marginTop: '66px' }}>
               {/* 주수별 정보 컨텐츠 - 화면 가득 차게 */}
               <div className="px-2 py-4">
                 <WeeklyInfo currentWeek={selectedWeek} />

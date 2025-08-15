@@ -87,7 +87,7 @@ export const FirstPage: React.FC = () => {
                 className="text-base text-gray-600 hover:text-brand-500 transition-colors"
                 style={{ fontWeight: '500' }}
               >
-                임신 주차를 알고싶어요
+                임신 주수를 알고싶어요
               </button>
             </div>
           </div>

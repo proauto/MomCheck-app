@@ -91,7 +91,7 @@ export const WeightDistributionDonut: React.FC<WeightDistributionDonutProps> = R
   
   return (
     <Card className="h-full" style={{ height: '510px', display: 'flex', flexDirection: 'column', justifyContent: 'center', outline: 'none' }}>
-      <div style={{ marginTop: '-20px', outline: 'none' }}>
+      <div className="sm:-mt-5 -mt-8" style={{ outline: 'none' }}>
         <ResponsiveContainer width="100%" height={350}>
         <PieChart margin={{ top: 0, right: 0, bottom: 0, left: 0 }} style={{ outline: 'none' }}>
           <Pie

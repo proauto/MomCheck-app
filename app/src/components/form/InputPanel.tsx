@@ -88,7 +88,7 @@ export const InputPanel: React.FC<InputPanelProps> = ({
                   max={210}
                   className="w-full px-md bg-bg-field border border-border-subtle
                     focus:outline-none focus:ring-2 focus:ring-brand-500 focus:border-transparent
-                    text-text-default pr-10 font-medium"
+                    text-text-default pr-10 sm:font-medium font-normal"
                   style={{ 
                     height: '48px',
                     borderRadius: '24px'
@@ -112,7 +112,7 @@ export const InputPanel: React.FC<InputPanelProps> = ({
                   step={0.1}
                   className="w-full px-md bg-bg-field border border-border-subtle
                     focus:outline-none focus:ring-2 focus:ring-brand-500 focus:border-transparent
-                    text-text-default pr-10 font-medium"
+                    text-text-default pr-10 sm:font-medium font-normal"
                   style={{ 
                     height: '48px',
                     borderRadius: '24px'

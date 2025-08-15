@@ -48,10 +48,12 @@ export const FirstPage: React.FC = () => {
           <div className="flex flex-col items-center px-lg">
             {/* 로고 및 타이틀 - 상단 여백 */}
             <div className="text-center mt-8 mb-8">
-              <div className="w-20 h-20 mx-auto mb-4 bg-gradient-to-br from-purple-400 to-pink-400 rounded-2xl flex items-center justify-center">
-                <svg className="w-10 h-10 text-white" fill="currentColor" viewBox="0 0 24 24">
-                  <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
-                </svg>
+              <div className="w-20 h-20 mx-auto mb-4 rounded-2xl overflow-hidden">
+                <img 
+                  src={logoImg} 
+                  alt="MomCheck Logo" 
+                  className="w-full h-full object-cover"
+                />
               </div>
               <h1 
                 className="text-center" 
@@ -66,15 +68,13 @@ export const FirstPage: React.FC = () => {
               </h1>
             </div>
             
-            {/* 입력 폼 카드 */}
+            {/* 입력 폼 */}
             <div className="w-full">
-              <div className="bg-white rounded-3xl p-6 shadow-sm border border-gray-100">
-                <InputPanel
-                  values={form}
-                  onChange={setForm}
-                  onSubmit={handleSubmit}
-                />
-              </div>
+              <InputPanel
+                values={form}
+                onChange={setForm}
+                onSubmit={handleSubmit}
+              />
             </div>
           </div>
           

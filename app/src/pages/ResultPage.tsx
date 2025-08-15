@@ -184,14 +184,137 @@ export const ResultPage: React.FC = () => {
   
   return (
     <div style={{ height: '100vh', overflow: 'hidden' }}>
-      <TopBar 
-        logoSrc={logoImg} 
-        title="MomCheck" 
-        activeTab={activeTab}
-        onTabChange={setActiveTab}
-      />
+      {/* 웹에서만 TopBar 표시 */}
+      <div className="hidden sm:block">
+        <TopBar 
+          logoSrc={logoImg} 
+          title="MomCheck" 
+          activeTab={activeTab}
+          onTabChange={setActiveTab}
+        />
+      </div>
+      
       <Page title="체중 관리 결과">
-        <div className="h-[calc(100vh-64px)] flex">
+        {/* 모바일 레이아웃 (앱 버전) */}
+        <div className="min-h-screen bg-gray-50 sm:hidden">
+          {/* Right Part 컨텐츠를 앱 전체 화면에 맞게 */}
+          <div className="overflow-y-auto pb-[123px]">
+            {activeTab === 'result' ? (
+              <div className="space-y-6 p-4">
+                {/* 상태 메시지와 공유 버튼 */}
+                <div>
+                  <StatusCard {...status} showShareButton={true} />
+                </div>
+                
+                {/* 차트 */}
+                <WeightProgressChart
+                  series={results.series}
+                  targets={results.targets}
+                  currentWeek={calculationParams.week}
+                  preWeight={calculationParams.preWeight}
+                  currentWeight={calculationParams.weight}
+                />
+                
+                {/* 모바일에서는 세로로 배치 */}
+                <div className="space-y-6">
+                  {/* 주차별 추천 체중 테이블 */}
+                  <div>
+                    <div className="flex justify-between items-center mb-4">
+                      <h3 className="text-lg font-bold text-gray-900">
+                        주차별 추천 체중
+                      </h3>
+                    </div>
+                    <WeeklyTargetTable 
+                      rows={results.tableRows}
+                      currentWeek={calculationParams.week}
+                      currentWeight={calculationParams.weight}
+                      preWeight={calculationParams.preWeight}
+                      expanded={tableExpanded}
+                      onExpandChange={setTableExpanded}
+                    />
+                  </div>
+
+                  {/* 증가한 체중 분포도 */}
+                  <div>
+                    <div className="flex justify-between items-center mb-4">
+                      <h3 className="text-lg font-bold text-gray-900">
+                        증가한 체중 분포도 (예상)
+                      </h3>
+                      <select
+                        value={donutWeek}
+                        onChange={(e) => setDonutWeek(Number(e.target.value))}
+                        className="px-3 py-2 text-sm bg-gray-200 rounded-3xl"
+                      >
+                        {Array.from({ length: 37 }, (_, i) => (
+                          <option key={i + 4} value={i + 4}>
+                            {i + 4} Weeks
+                          </option>
+                        ))}
+                      </select>
+                    </div>
+                    <WeightDistributionDonut
+                      totalGainKg={donutTotalGainKg}
+                      week={donutWeek}
+                    />
+                  </div>
+                </div>
+
+                {/* 안내 및 주의사항 */}
+                <GuidanceCard
+                  items={[
+                    '본 서비스는 임신 중 체중 변화에 대한 일반적인 참고 정보를 제공합니다.',
+                    '제공되는 수치는 통계와 평균값을 기반으로 하며, 개인의 건강 상태나 상황에 따라 달라질 수 있습니다.',
+                    '체중 관리 및 건강과 관련된 모든 의학적 결정은 반드시 전문의와 상담 후 진행하시기 바랍니다.',
+                    '갑작스러운 체중 변화, 통증, 출혈, 호흡 곤란 등 이상 증상이 있을 경우 즉시 의료기관을 방문하세요.',
+                    '임신 기간 동안의 건강 관리는 체중 수치만이 아닌 전체적인 생활습관, 식습관 운동 등을 함께 고려해야 합니다.',
+                    '자료 출처 : Institute of Medicine (IOM) and National Research Council.', 
+                    'Weight Gain During Pregnancy: Reexamining the Guidelines. Washington, DC: The National Academies Press; 2009. doi:10.17226/12584',
+                    '쌍둥이 범위는 IOM 2009 공인 국제 가이드라인을 따릅니다.',
+                    '세쌍둥이, 네쌍둥이는 공인된 국제 가이드라인이 없습니다.',
+                    '문의 : previtlab@gmail.com 프레빗랩(주)'
+                  ]}
+                />
+              </div>
+            ) : (
+              /* 주수별 맞춤정보 컨텐츠 */
+              <div className="p-4">
+                <WeeklyInfo currentWeek={params.week} />
+              </div>
+            )}
+          </div>
+          
+          {/* 앱용 하단 네비게이션 바 - 높이 123px */}
+          <div className="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200" style={{ height: '123px' }}>
+            <div className="flex h-full">
+              <button
+                onClick={() => window.location.href = '/'}
+                className="flex-1 flex flex-col items-center justify-center"
+              >
+                <svg className="w-6 h-6 text-brand-500 mb-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} 
+                    d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" 
+                  />
+                </svg>
+                <span className="text-sm text-brand-500 font-medium">홈</span>
+              </button>
+              
+              <button
+                onClick={() => window.location.href = '/weekly-info'}
+                className="flex-1 flex flex-col items-center justify-center"
+              >
+                <svg className="w-6 h-6 text-gray-400 mb-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} 
+                    d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" 
+                  />
+                </svg>
+                <span className="text-sm text-gray-400">주수별정보</span>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        {/* 웹 레이아웃 (기존 버전) */}
+        <div className="h-[calc(100vh-64px)] flex hidden sm:flex">
           {/* Left Part - 입력값 표시 */}
           <div className="w-80 bg-white border-r border-border-subtle flex flex-col relative">
             <div className="p-lg space-y-lg flex-1">
@@ -508,7 +631,11 @@ export const ResultPage: React.FC = () => {
           </div>
         </div>
       </Page>
-      <BottomNav />
+      
+      {/* 웹에서만 BottomNav 표시 */}
+      <div className="hidden sm:block">
+        <BottomNav />
+      </div>
     </div>
   );
 };

@@ -3,7 +3,6 @@
   "version": "1.0.0",
   "private": true,
   "scripts": {
-    "install": "cd momcheck-app && npm install",
     "build": "cd momcheck-app && npm run build",
     "dev": "cd momcheck-app && npm run dev"
   }

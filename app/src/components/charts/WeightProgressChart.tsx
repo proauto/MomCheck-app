@@ -7,7 +7,6 @@ import {
   CartesianGrid,
   Tooltip,
   ResponsiveContainer,
-  ReferenceLine,
   ComposedChart
 } from 'recharts';
 import { Card } from '../layout/Card';

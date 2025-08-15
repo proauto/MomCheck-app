@@ -33,20 +33,19 @@ export const WeightDistributionDonut: React.FC<WeightDistributionDonutProps> = R
       
       return (
         <div 
+          className="sm:w-36 sm:h-30 w-20 h-20"
           style={{
-            width: '150px',
-            height: '120px',
             backgroundColor: '#FFFFFF',
             border: '1px solid #000000',
             borderRadius: '8px',
-            padding: '16px',
+            padding: '8px',
             boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)',
             fontFamily: 'Noto Sans KR',
-            fontSize: '16px',
+            fontSize: '12px',
             display: 'flex',
             flexDirection: 'column',
             justifyContent: 'center',
-            gap: '8px'
+            gap: '4px'
           }}
         >
           <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
@@ -134,10 +133,10 @@ export const WeightDistributionDonut: React.FC<WeightDistributionDonutProps> = R
                 aria-hidden="true"
               />
               <span 
+                className="sm:text-base text-xs"
                 style={{ 
                   fontFamily: 'Noto Sans KR',
                   fontWeight: '400',
-                  fontSize: '16px',
                   color: '#000000'
                 }}
               >

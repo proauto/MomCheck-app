@@ -62,15 +62,14 @@ export const WeightProgressChart: React.FC<WeightProgressChartProps> = ({
       
       return (
         <div 
+          className="sm:w-56 sm:h-30 w-28 h-20"
           style={{
-            width: '225px',
-            height: '120px',
             backgroundColor: '#FFFFFF',
             border: '1px solid #000000',
             borderRadius: '8px',
-            padding: '16px',
+            padding: '8px',
             fontFamily: 'Noto Sans KR',
-            fontSize: '16px',
+            fontSize: '12px',
             lineHeight: '1.4',
             display: 'flex',
             flexDirection: 'column',
@@ -79,11 +78,14 @@ export const WeightProgressChart: React.FC<WeightProgressChartProps> = ({
           role="dialog"
           aria-live="polite"
         >
-          <p style={{ fontWeight: '500', marginBottom: '8px', margin: '0 0 8px 0' }}>
+          <p style={{ fontWeight: '500', marginBottom: '4px', margin: '0 0 4px 0' }}>
             {label}Weeks
           </p>
-          <p style={{ fontWeight: '400', marginBottom: '4px', margin: '0 0 4px 0' }}>
-            추천 체중 범위 : {lowWeight?.toFixed(1)}~{highWeight?.toFixed(1)}kg
+          <p style={{ fontWeight: '400', marginBottom: '2px', margin: '0 0 2px 0' }}>
+            추천 체중범위
+          </p>
+          <p style={{ fontWeight: '400', marginBottom: '2px', margin: '0 0 2px 0' }}>
+            {lowWeight?.toFixed(1)}~{highWeight?.toFixed(1)}kg
           </p>
           {actualWeight && (
             <p style={{ fontWeight: '400', margin: '0' }}>

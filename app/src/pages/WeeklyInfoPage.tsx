@@ -64,7 +64,7 @@ export const WeeklyInfoPage: React.FC = () => {
               <LoadingSpinner message="주수별 맞춤정보를 불러오는 중..." />
             </div>
           ) : (
-            <div className="overflow-y-auto overflow-x-hidden" style={{ height: 'calc(100vh - 88px)', marginTop: '88px' }}
+            <div className="overflow-y-auto overflow-x-hidden" style={{ height: 'calc(100vh - 88px)', marginTop: '88px' }}>
               {/* 주수별 정보 컨텐츠 - 화면 가득 차게 */}
               <div className="px-2 py-4">
                 <WeeklyInfo currentWeek={selectedWeek} />

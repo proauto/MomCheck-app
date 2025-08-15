@@ -1,7 +1,7 @@
 {
-  "buildCommand": "cd momcheck-app && npm install && npm run build",
+  "installCommand": "npm install --prefix momcheck-app",
+  "buildCommand": "npm run build --prefix momcheck-app",
   "outputDirectory": "momcheck-app/dist",
-  "installCommand": "echo 'Skip root install'",
   "rewrites": [
     { "source": "/(.*)", "destination": "/index.html" }
   ]

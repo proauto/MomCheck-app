@@ -28,14 +28,14 @@ export const WeeklyInfoPage: React.FC = () => {
       <Page title="주수별 맞춤정보">
         {/* 모바일 레이아웃 (앱 버전) */}
         <div className="min-h-screen bg-gray-50 sm:hidden overflow-x-hidden">
-          <div className="h-screen overflow-y-auto overflow-x-hidden pb-16">
-            {/* 주수별 정보 컨텐츠 - 좌우 간격 10px */}
-            <div className="px-2.5 py-md">
+          <div className="min-h-screen overflow-y-auto overflow-x-hidden pb-16">
+            {/* 주수별 정보 컨텐츠 - 좌우 간격을 p-4로 통일 */}
+            <div className="p-4">
               <WeeklyInfo currentWeek={selectedWeek} />
             </div>
 
             {/* 추가 안내 */}
-            <div className="px-2.5 py-md">
+            <div className="px-4 py-md">
               <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
                 <div className="flex items-start">
                   <svg className="w-5 h-5 text-blue-500 mr-3 mt-0.5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
@@ -59,7 +59,7 @@ export const WeeklyInfoPage: React.FC = () => {
           <div className="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 h-16">
             <div className="flex h-full">
               <button
-                onClick={() => window.location.href = '/'}
+                onClick={() => window.history.back()}
                 className="flex-1 flex flex-col items-center justify-center"
               >
                 <svg className="w-6 h-6 text-gray-400 mb-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">

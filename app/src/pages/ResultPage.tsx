@@ -198,7 +198,7 @@ export const ResultPage: React.FC = () => {
         {/* 모바일 레이아웃 (앱 버전) */}
         <div className="min-h-screen bg-gray-50 sm:hidden overflow-x-hidden">
           {/* Right Part 컨텐츠를 앱 전체 화면에 맞게 - 스크롤 가능 */}
-          <div className="h-screen overflow-y-auto overflow-x-hidden pb-16">
+          <div className="min-h-screen overflow-y-auto overflow-x-hidden pb-16">
             {activeTab === 'result' ? (
               <div className="space-y-6 p-4">
                 {/* 상태 메시지 (공유 버튼 제거) */}

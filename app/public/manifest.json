@@ -1,7 +1,7 @@
 {
   "name": "MomCheck - 임신 체중 관리",
   "short_name": "MomCheck",
-  "description": "임신 중 건강한 체중 관리를 위한 계산기",
+  "description": "임신 중 체중 변화를 한눈에 확인할 수 있는 건강 관리 서비스입니다. 주차별 권장 체중과 현재 상태를 비교하고, 태아·양수·태반 등 증가된 체중의 분포도를 볼 수 있어요.",
   "start_url": "/",
   "display": "standalone",
   "background_color": "#F7F0EC",

@@ -33,8 +33,10 @@ export const WeightDistributionDonut: React.FC<WeightDistributionDonutProps> = R
       
       return (
         <div 
-          className="sm:w-36 sm:h-30 w-20 h-20"
+          className="sm:w-36 sm:h-30"
           style={{
+            width: window.innerWidth < 640 ? '82px' : '144px', // 앱에서 20→82px (2px 증가)
+            height: window.innerWidth < 640 ? '80px' : '120px',
             backgroundColor: '#FFFFFF',
             border: '1px solid #000000',
             borderRadius: '8px',

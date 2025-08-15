@@ -163,30 +163,26 @@ export const WeightProgressChart: React.FC<WeightProgressChartProps> = ({
             dataKey="actual"
             stroke="transparent"
             strokeWidth={0}
-            dot={false}
+            dot={(props) => {
+              const { cx, cy, payload } = props;
+              // 현재 주차에만 마커 표시
+              if (payload?.week === currentWeek && payload?.actual !== undefined) {
+                return (
+                  <circle 
+                    cx={cx} 
+                    cy={cy} 
+                    r={6} 
+                    fill="#5B3BFF" 
+                    stroke="transparent" 
+                    strokeWidth={0}
+                  />
+                );
+              }
+              return null;
+            }}
             connectNulls={false}
             aria-label="실제 체중 변화"
           />
-          
-          {/* 현재 주차에만 마커 표시 */}
-          {data.map((item, index) => {
-            if (item.week === currentWeek && item.actual !== undefined) {
-              const xPercent = ((item.week - 1) / 39) * 100; // 1~40주를 0~100%로 변환
-              const yPercent = ((yAxisMax - item.actual) / (yAxisMax - yAxisMin)) * 100; // Y축 위치 계산
-              return (
-                <circle
-                  key={`current-marker-${index}`}
-                  cx={`${xPercent}%`}
-                  cy={`${yPercent}%`}
-                  r={6}
-                  fill="#5B3BFF"
-                  stroke="transparent"
-                  strokeWidth={0}
-                />
-              );
-            }
-            return null;
-          })}
           
           <ReferenceLine 
             x={currentWeek} 

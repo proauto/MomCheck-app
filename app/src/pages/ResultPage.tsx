@@ -343,11 +343,8 @@ export const ResultPage: React.FC = () => {
               </button>
               
               <button
-                onClick={() => {
-                  sessionStorage.setItem('skipResultLoading', 'true');
-                  window.location.href = window.location.pathname + window.location.search;
-                }}
-                className="flex-1 flex flex-col items-center justify-center"
+                disabled={true}
+                className="flex-1 flex flex-col items-center justify-center cursor-not-allowed opacity-50"
               >
                 <svg className="w-6 h-6 text-brand-500 mb-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} 

@@ -124,7 +124,11 @@ export const WeightProgressChart: React.FC<WeightProgressChartProps> = ({
             content={<CustomTooltip />}
             animationDuration={0}
             isAnimationActive={false}
-            cursor={false}
+            cursor={{
+              stroke: "#3534A7",
+              strokeWidth: 1.5,
+              strokeDasharray: "5 5"
+            }}
           />
           
           <defs>
@@ -186,12 +190,6 @@ export const WeightProgressChart: React.FC<WeightProgressChartProps> = ({
             aria-label="실제 체중 변화"
           />
           
-          <ReferenceLine 
-            x={currentWeek} 
-            stroke="#3534A7" 
-            strokeWidth={1.5}
-            strokeDasharray="5 5"
-          />
           
         </ComposedChart>
       </ResponsiveContainer>

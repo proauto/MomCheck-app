@@ -99,9 +99,9 @@ export const WeightProgressChart: React.FC<WeightProgressChartProps> = ({
   };
   
   return (
-    <Card style={{ outline: 'none', paddingLeft: '-2.5px' }}>
+    <Card style={{ outline: 'none', paddingLeft: '7.5px' }}>
       <ResponsiveContainer width="100%" height={300}>
-        <ComposedChart data={data} margin={{ top: 10, right: 10, left: 10, bottom: 10 }} style={{ outline: 'none' }}>
+        <ComposedChart data={data} margin={{ top: 10, right: 10, left: 0, bottom: 10 }} style={{ outline: 'none' }}>
           <XAxis 
             dataKey="week" 
             stroke="#9C8EAA"
@@ -140,6 +140,8 @@ export const WeightProgressChart: React.FC<WeightProgressChartProps> = ({
             stroke="#3534A7"
             strokeWidth={2}
             fill="url(#areaGradient)"
+            activeDot={false}
+            dot={false}
           />
           <Area
             type="monotone"
@@ -148,6 +150,8 @@ export const WeightProgressChart: React.FC<WeightProgressChartProps> = ({
             strokeWidth={2}
             fill="white"
             fillOpacity={1}
+            activeDot={false}
+            dot={false}
           />
           
           <CartesianGrid 

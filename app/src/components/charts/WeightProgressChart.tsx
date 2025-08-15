@@ -119,17 +119,6 @@ export const WeightProgressChart: React.FC<WeightProgressChartProps> = ({
             axisLine={false}
             tickLine={false}
           />
-          <Tooltip 
-            content={<CustomTooltip />}
-            animationDuration={0}
-            isAnimationActive={false}
-            cursor={{
-              stroke: "#3534A7",
-              strokeWidth: 1.5,
-              strokeDasharray: "5 5"
-            }}
-          />
-          
           <defs>
             <linearGradient id="areaGradient" x1="0%" y1="0%" x2="100%" y2="0%">
               <stop offset="0%" stopColor="#B4B4FF" stopOpacity={1} />
@@ -151,6 +140,17 @@ export const WeightProgressChart: React.FC<WeightProgressChartProps> = ({
             strokeWidth={2}
             fill="white"
             fillOpacity={1}
+          />
+          
+          <Tooltip 
+            content={<CustomTooltip />}
+            animationDuration={0}
+            isAnimationActive={false}
+            cursor={{
+              stroke: "#3534A7",
+              strokeWidth: 1.5,
+              strokeDasharray: "5 5"
+            }}
           />
           
           <CartesianGrid 

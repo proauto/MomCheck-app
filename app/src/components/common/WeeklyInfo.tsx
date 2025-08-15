@@ -81,7 +81,7 @@ export const WeeklyInfo: React.FC<WeeklyInfoProps> = ({ currentWeek }) => {
   };
 
   return (
-    <div className="space-y-xl" style={{ paddingLeft: '100px', paddingRight: '100px' }}>
+    <div className="space-y-xl sm:px-24 px-0">
       {/* 제목 */}
       <h2 
         style={{ 

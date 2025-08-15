@@ -46,7 +46,10 @@ export const ResultPage: React.FC = () => {
   // 도넛 차트용 별도 주차 state - 초기값만 설정하고 수정하기 전까지 고정
   const [donutWeek, setDonutWeek] = React.useState(params.week);
   const [tableExpanded, setTableExpanded] = React.useState(false);
-  const [isLoading, setIsLoading] = React.useState(true);
+  const [isLoading, setIsLoading] = React.useState(() => {
+    // URL에서 온 경우만 로딩 화면 표시 (첫 페이지 > 결과 페이지)
+    return window.location.search.includes('week=');
+  });
   
   // 실제 계산에 사용할 고정된 파라미터 (수정하기를 눌렀을 때만 업데이트)
   const [calculationParams, setCalculationParams] = React.useState(params);
@@ -211,7 +214,7 @@ export const ResultPage: React.FC = () => {
             <LoadingSpinner message="결과를 계산하는 중..." />
           ) : (
             /* Right Part 컨텐츠를 앱 전체 화면에 맞게 - 스크롤 가능 */
-            <div className="min-h-screen overflow-y-auto overflow-x-hidden pb-16">
+            <div className="overflow-y-auto overflow-x-hidden pb-16" style={{ height: 'calc(100vh - 64px)' }}>
             {activeTab === 'result' ? (
               <div className="space-y-6 p-4">
                 {/* 상태 메시지 (공유 버튼 제거) */}

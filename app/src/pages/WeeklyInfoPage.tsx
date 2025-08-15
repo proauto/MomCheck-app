@@ -10,17 +10,10 @@ import logoImg from '../assets/logo.png';
 export const WeeklyInfoPage: React.FC = () => {
   const { form } = useStore();
   const [selectedWeek, setSelectedWeek] = useState<number>(form.week || 20);
-  const [isLoading, setIsLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(false); // 주수별정보 페이지는 로딩 화면 없음
 
   useEffect(() => {
     document.title = '주수별 맞춤정보 - MomCheck';
-    
-    // 앱에서만 로딩 시뮬레이션 (1.5초)
-    const timer = setTimeout(() => {
-      setIsLoading(false);
-    }, 1500);
-    
-    return () => clearTimeout(timer);
   }, []);
 
   const handleWeekChange = (week: number) => {

@@ -420,7 +420,7 @@ export const ResultPage: React.FC = () => {
                       onChange={(e) => setEditableParams(prev => ({ ...prev, height: Number(e.target.value) }))}
                       className="w-full px-md bg-bg-field border border-border-subtle
                         focus:outline-none focus:ring-2 focus:ring-brand-500 focus:border-transparent
-                        text-text-default pr-10 font-bold"
+                        text-text-default pr-10 font-normal"
                       style={{ 
                         height: '48px',
                         borderRadius: '24px'
@@ -441,7 +441,7 @@ export const ResultPage: React.FC = () => {
                       step={0.1}
                       className="w-full px-md bg-bg-field border border-border-subtle
                         focus:outline-none focus:ring-2 focus:ring-brand-500 focus:border-transparent
-                        text-text-default pr-10 font-bold"
+                        text-text-default pr-10 font-normal"
                       style={{ 
                         height: '48px',
                         borderRadius: '24px'

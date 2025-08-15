@@ -30,11 +30,41 @@ export const WeeklyInfoPage: React.FC = () => {
       <Page title="주수별 맞춤정보">
         {/* 모바일 레이아웃 (앱 버전) */}
         <div className="min-h-screen bg-gray-50 sm:hidden overflow-x-hidden">
+          {/* 상단 네비게이션 바 - 88px */}
+          <div className="fixed top-0 left-0 right-0 bg-white border-b border-gray-200 z-50" style={{ height: '88px' }}>
+            <div className="flex items-center justify-between h-full px-4">
+              {/* 뒤로가기 버튼 */}
+              <button
+                onClick={() => window.history.back()}
+                className="p-2"
+              >
+                <svg className="w-6 h-6 text-black" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+                </svg>
+              </button>
+              
+              {/* 중앙 타이틀 */}
+              <h1 style={{
+                fontFamily: 'Noto Sans CJK KR',
+                fontWeight: '500',
+                fontSize: '24px',
+                color: '#000000'
+              }}>
+                주수별 맞춤정보
+              </h1>
+              
+              {/* 빈 공간 (균형을 위해) */}
+              <div className="w-10"></div>
+            </div>
+          </div>
+          
           {isLoading ? (
             /* 앱에서만 로딩 화면 */
-            <LoadingSpinner message="주수별 맞춤정보를 불러오는 중..." />
+            <div style={{ marginTop: '88px' }}>
+              <LoadingSpinner message="주수별 맞춤정보를 불러오는 중..." />
+            </div>
           ) : (
-            <div className="min-h-screen overflow-y-auto overflow-x-hidden pb-16">
+            <div className="overflow-y-auto overflow-x-hidden" style={{ height: 'calc(100vh - 88px)', marginTop: '88px' }}
               {/* 주수별 정보 컨텐츠 - 화면 가득 차게 */}
               <div className="px-2 py-4">
                 <WeeklyInfo currentWeek={selectedWeek} />
@@ -62,48 +92,6 @@ export const WeeklyInfoPage: React.FC = () => {
             </div>
           )}
 
-          {/* 앱용 하단 네비게이션 바 - 로딩 중이 아닐 때만 표시 */}
-          {!isLoading && (
-            <div className="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 h-16">
-              <div className="flex h-full">
-                <button
-                  onClick={() => window.location.href = '/'}
-                  className="flex-1 flex flex-col items-center justify-center"
-                >
-                  <svg className="w-6 h-6 text-gray-400 mb-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} 
-                      d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" 
-                    />
-                  </svg>
-                  <span className="text-xs text-gray-400">홈</span>
-                </button>
-                
-                <button
-                  onClick={() => window.history.back()}
-                  className="flex-1 flex flex-col items-center justify-center"
-                >
-                  <svg className="w-6 h-6 text-gray-400 mb-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} 
-                      d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" 
-                    />
-                  </svg>
-                  <span className="text-xs text-gray-400">체중관리</span>
-                </button>
-                
-                <button
-                  disabled={true}
-                  className="flex-1 flex flex-col items-center justify-center cursor-not-allowed opacity-50"
-                >
-                  <svg className="w-6 h-6 text-brand-500 mb-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} 
-                      d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" 
-                    />
-                  </svg>
-                  <span className="text-xs text-brand-500 font-medium">주수별정보</span>
-                </button>
-              </div>
-            </div>
-          )}
         </div>
 
         {/* 웹 레이아웃 (기존 버전) */}

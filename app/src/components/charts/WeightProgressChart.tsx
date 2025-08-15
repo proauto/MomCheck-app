@@ -99,7 +99,7 @@ export const WeightProgressChart: React.FC<WeightProgressChartProps> = ({
   };
   
   return (
-    <Card style={{ outline: 'none' }}>
+    <Card style={{ outline: 'none', paddingLeft: '15px' }}>
       <ResponsiveContainer width="100%" height={300}>
         <ComposedChart data={data} margin={{ top: 10, right: 10, left: 10, bottom: 10 }} style={{ outline: 'none' }}>
           <XAxis 
@@ -165,7 +165,7 @@ export const WeightProgressChart: React.FC<WeightProgressChartProps> = ({
             strokeWidth={0}
             dot={(props) => {
               const { cx, cy, payload, index } = props;
-              // 현재 주차에만 마커 표시
+              // 현재 주차에만 마커 표시 (하얀색 테두리 제거)
               if (payload?.week === currentWeek) {
                 return (
                   <circle 
@@ -174,8 +174,8 @@ export const WeightProgressChart: React.FC<WeightProgressChartProps> = ({
                     cy={cy} 
                     r={6} 
                     fill="#5B3BFF" 
-                    stroke="#FFFFFF" 
-                    strokeWidth={2}
+                    stroke="transparent" 
+                    strokeWidth={0}
                   />
                 );
               }

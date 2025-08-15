@@ -15,12 +15,12 @@ export const GuidanceCard: React.FC<GuidanceCardProps> = ({ items }) => {
           fontSize: '16px',
           color: '#938288',
           marginBottom: '16px',
-          paddingLeft: '30px'
+          paddingLeft: '15px'
         }}
       >
         안내 및 주의사항
       </h3>
-      <ul className="space-y-sm" style={{ paddingLeft: '30px' }}>
+      <ul className="space-y-sm" style={{ paddingLeft: '15px' }}>
         {items.map((item, index) => (
           <li key={index} className="flex items-start gap-sm">
             <span 

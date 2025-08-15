@@ -9,6 +9,13 @@ export default defineConfig({
       output: {
         manualChunks: undefined
       }
+    },
+    minify: 'terser',
+    terserOptions: {
+      compress: {
+        drop_console: true,
+        drop_debugger: true
+      }
     }
   },
   preview: {

@@ -1,7 +1,9 @@
+# Security Headers Configuration Guide
+
+## For Vercel Deployment
+Create vercel.json in project root with security headers:
+
 {
-  "rewrites": [
-    { "source": "/(.*)", "destination": "/index.html" }
-  ],
   "headers": [
     {
       "source": "/(.*)",
@@ -30,3 +32,13 @@
     }
   ]
 }
+
+## For Netlify Deployment
+Create _headers file in public folder:
+
+/*
+  X-Content-Type-Options: nosniff
+  X-Frame-Options: DENY
+  X-XSS-Protection: 1; mode=block
+  Referrer-Policy: strict-origin-when-cross-origin
+  Permissions-Policy: camera=(), microphone=(), geolocation=()

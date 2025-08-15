@@ -32,7 +32,9 @@
       "Bash(mv:*)",
       "Bash(npx vercel:*)",
       "Bash(npm run preview:*)",
-      "Bash(curl:*)"
+      "Bash(curl:*)",
+      "Bash(git fetch:*)",
+      "Bash(npm audit:*)"
     ],
     "deny": [],
     "ask": [],

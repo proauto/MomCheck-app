@@ -72,9 +72,20 @@ export const WeeklyInfo: React.FC<WeeklyInfoProps> = ({ currentWeek }) => {
   const scrollToWeek = (direction: 'left' | 'right') => {
     const container = document.getElementById('week-slider');
     if (container) {
-      const scrollAmount = 200;
-      container.scrollBy({
-        left: direction === 'right' ? scrollAmount : -scrollAmount,
+      const containerWidth = container.clientWidth;
+      const scrollAmount = containerWidth * 0.8; // 컨테이너 너비의 80%만큼 스크롤
+      const currentScroll = container.scrollLeft;
+      const maxScroll = container.scrollWidth - container.clientWidth;
+      
+      let newScrollPosition;
+      if (direction === 'right') {
+        newScrollPosition = Math.min(currentScroll + scrollAmount, maxScroll);
+      } else {
+        newScrollPosition = Math.max(currentScroll - scrollAmount, 0);
+      }
+      
+      container.scrollTo({
+        left: newScrollPosition,
         behavior: 'smooth'
       });
     }
@@ -112,10 +123,15 @@ export const WeeklyInfo: React.FC<WeeklyInfoProps> = ({ currentWeek }) => {
         
         <div 
           id="week-slider"
-          className="overflow-x-auto scrollbar-hide mx-8"
-          style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
+          className="overflow-x-auto mx-8"
+          style={{ 
+            scrollbarWidth: typeof window !== 'undefined' && window.innerWidth >= 640 ? 'thin' : 'none', 
+            msOverflowStyle: typeof window !== 'undefined' && window.innerWidth >= 640 ? 'auto' : 'none',
+            WebkitOverflowScrolling: 'touch',
+            scrollBehavior: 'smooth'
+          }}
         >
-          <div className="flex space-x-2 py-2">
+          <div className="flex space-x-2 py-2" style={{ minWidth: 'max-content' }}>
             {weeks.map(week => (
               <button
                 key={week}

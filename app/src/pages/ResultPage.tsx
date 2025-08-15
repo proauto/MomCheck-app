@@ -9,6 +9,7 @@ import { WeightProgressChart } from '../components/charts/WeightProgressChart';
 import { WeightDistributionDonut } from '../components/charts/WeightDistributionDonut';
 import { WeeklyTargetTable } from '../components/data/WeeklyTargetTable';
 import { WeeklyInfo } from '../components/common/WeeklyInfo';
+import { LoadingSpinner } from '../components/common/LoadingSpinner';
 import { useStore } from '../app/store';
 // import { bmi } from '../domain/bmi';
 import { calcTargets } from '../domain/targets';
@@ -45,6 +46,7 @@ export const ResultPage: React.FC = () => {
   // 도넛 차트용 별도 주차 state - 초기값만 설정하고 수정하기 전까지 고정
   const [donutWeek, setDonutWeek] = React.useState(params.week);
   const [tableExpanded, setTableExpanded] = React.useState(false);
+  const [isLoading, setIsLoading] = React.useState(true);
   
   // 실제 계산에 사용할 고정된 파라미터 (수정하기를 눌렀을 때만 업데이트)
   const [calculationParams, setCalculationParams] = React.useState(params);
@@ -118,6 +120,13 @@ export const ResultPage: React.FC = () => {
       targets: results.targets, 
       distribution: results.distribution 
     });
+    
+    // 앱에서만 로딩 시뮬레이션 (1.5초)
+    const timer = setTimeout(() => {
+      setIsLoading(false);
+    }, 1500);
+    
+    return () => clearTimeout(timer);
   }, [results, setResult]);
 
   // URL 파라미터가 변경되면 편집 가능한 파라미터도 동기화
@@ -197,8 +206,12 @@ export const ResultPage: React.FC = () => {
       <Page title="체중 관리 결과">
         {/* 모바일 레이아웃 (앱 버전) */}
         <div className="min-h-screen bg-gray-50 sm:hidden overflow-x-hidden">
-          {/* Right Part 컨텐츠를 앱 전체 화면에 맞게 - 스크롤 가능 */}
-          <div className="min-h-screen overflow-y-auto overflow-x-hidden pb-16">
+          {isLoading ? (
+            /* 앱에서만 로딩 화면 */
+            <LoadingSpinner message="결과를 계산하는 중..." />
+          ) : (
+            /* Right Part 컨텐츠를 앱 전체 화면에 맞게 - 스크롤 가능 */
+            <div className="min-h-screen overflow-y-auto overflow-x-hidden pb-16">
             {activeTab === 'result' ? (
               <div className="space-y-6 p-4">
                 {/* 상태 메시지 (공유 버튼 제거) */}
@@ -304,9 +317,11 @@ export const ResultPage: React.FC = () => {
               </div>
             )}
           </div>
+          )}
           
-          {/* 앱용 하단 네비게이션 바 - 높이 64px (주수별정보와 동일) */}
-          <div className="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 h-16">
+          {/* 앱용 하단 네비게이션 바 - 로딩 중이 아닐 때만 표시 */}
+          {!isLoading && (
+            <div className="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 h-16">
             <div className="flex h-full">
               <button
                 onClick={() => window.location.href = window.location.pathname + window.location.search}
@@ -333,6 +348,7 @@ export const ResultPage: React.FC = () => {
               </button>
             </div>
           </div>
+          )}
         </div>
 
         {/* 웹 레이아웃 (기존 버전) */}

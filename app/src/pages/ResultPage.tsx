@@ -197,13 +197,13 @@ export const ResultPage: React.FC = () => {
       <Page title="체중 관리 결과">
         {/* 모바일 레이아웃 (앱 버전) */}
         <div className="min-h-screen bg-gray-50 sm:hidden">
-          {/* Right Part 컨텐츠를 앱 전체 화면에 맞게 */}
-          <div className="overflow-y-auto pb-[123px]">
+          {/* Right Part 컨텐츠를 앱 전체 화면에 맞게 - 스크롤 가능 */}
+          <div className="h-screen overflow-y-auto pb-[123px]">
             {activeTab === 'result' ? (
               <div className="space-y-6 p-4">
-                {/* 상태 메시지와 공유 버튼 */}
+                {/* 상태 메시지 (공유 버튼 제거) */}
                 <div>
-                  <StatusCard {...status} showShareButton={true} />
+                  <StatusCard {...status} showShareButton={false} />
                 </div>
                 
                 {/* 차트 */}
@@ -274,6 +274,28 @@ export const ResultPage: React.FC = () => {
                     '문의 : previtlab@gmail.com 프레빗랩(주)'
                   ]}
                 />
+
+                {/* 공유하기 버튼 - 안내 카드 아래 */}
+                <div className="flex justify-center pt-4">
+                  <button
+                    onClick={() => {
+                      const url = window.location.href;
+                      if (navigator.share) {
+                        navigator.share({
+                          title: 'MomCheck 체중 관리 결과',
+                          text: '임신 중 체중 관리 결과를 확인해보세요!',
+                          url: url
+                        });
+                      } else {
+                        navigator.clipboard.writeText(url);
+                        alert('링크가 클립보드에 복사되었습니다.');
+                      }
+                    }}
+                    className="bg-brand-500 hover:bg-brand-600 text-white px-8 py-3 rounded-full font-medium transition-colors"
+                  >
+                    공유하기
+                  </button>
+                </div>
               </div>
             ) : (
               /* 주수별 맞춤정보 컨텐츠 */
@@ -287,7 +309,7 @@ export const ResultPage: React.FC = () => {
           <div className="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200" style={{ height: '123px' }}>
             <div className="flex h-full">
               <button
-                onClick={() => window.location.href = '/'}
+                onClick={() => window.location.href = window.location.pathname + window.location.search}
                 className="flex-1 flex flex-col items-center justify-center"
               >
                 <svg className="w-6 h-6 text-brand-500 mb-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">

@@ -99,7 +99,7 @@ export const WeightProgressChart: React.FC<WeightProgressChartProps> = ({
   };
   
   return (
-    <Card style={{ outline: 'none', paddingLeft: '15px' }}>
+    <Card style={{ outline: 'none', paddingLeft: '7.5px' }}>
       <ResponsiveContainer width="100%" height={300}>
         <ComposedChart data={data} margin={{ top: 10, right: 10, left: 10, bottom: 10 }} style={{ outline: 'none' }}>
           <XAxis 
@@ -163,27 +163,30 @@ export const WeightProgressChart: React.FC<WeightProgressChartProps> = ({
             dataKey="actual"
             stroke="transparent"
             strokeWidth={0}
-            dot={(props) => {
-              const { cx, cy, payload, index } = props;
-              // 현재 주차에만 마커 표시 (하얀색 테두리 제거)
-              if (payload?.week === currentWeek) {
-                return (
-                  <circle 
-                    key={`dot-${index}`}
-                    cx={cx} 
-                    cy={cy} 
-                    r={6} 
-                    fill="#5B3BFF" 
-                    stroke="transparent" 
-                    strokeWidth={0}
-                  />
-                );
-              }
-              return <g />; // null 대신 빈 SVG 그룹 반환
-            }}
+            dot={false}
             connectNulls={false}
             aria-label="실제 체중 변화"
           />
+          
+          {/* 현재 주차에만 마커 표시 */}
+          {data.map((item, index) => {
+            if (item.week === currentWeek && item.actual !== undefined) {
+              const xPercent = ((item.week - 1) / 39) * 100; // 1~40주를 0~100%로 변환
+              const yPercent = ((yAxisMax - item.actual) / (yAxisMax - yAxisMin)) * 100; // Y축 위치 계산
+              return (
+                <circle
+                  key={`current-marker-${index}`}
+                  cx={`${xPercent}%`}
+                  cy={`${yPercent}%`}
+                  r={6}
+                  fill="#5B3BFF"
+                  stroke="transparent"
+                  strokeWidth={0}
+                />
+              );
+            }
+            return null;
+          })}
           
           <ReferenceLine 
             x={currentWeek} 

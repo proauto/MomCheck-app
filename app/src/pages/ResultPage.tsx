@@ -260,8 +260,10 @@ export const ResultPage: React.FC = () => {
                       <select
                         value={donutWeek}
                         onChange={(e) => setDonutWeek(Number(e.target.value))}
-                        className="px-3 py-2 text-sm bg-gray-200 rounded-3xl sm:w-auto w-28 focus:outline-none border-0"
+                        className="px-3 py-2 text-sm bg-gray-200 rounded-3xl sm:w-auto w-28 border-0 focus:border-gray-400"
                         style={{ minWidth: '120px', border: 'none', outline: 'none' }}
+                        onFocus={(e) => e.target.style.border = '1px solid #9CA3AF'}
+                        onBlur={(e) => e.target.style.border = 'none'}
                       >
                         {Array.from({ length: 37 }, (_, i) => (
                           <option key={i + 4} value={i + 4}>
@@ -391,7 +393,8 @@ export const ResultPage: React.FC = () => {
                     height: '48px',
                     borderRadius: '24px',
                     fontFamily: 'Noto Sans KR',
-                    fontWeight: '500',
+                    fontWeight: '400',
+                    fontSize: '24px',
                     color: editableParams.week ? '#000000' : '#938288',
                     backgroundImage: `url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='m6 8 4 4 4-4'/%3e%3c/svg%3e")`, 
                     backgroundPosition: 'right 0.5rem center', 
@@ -423,7 +426,10 @@ export const ResultPage: React.FC = () => {
                         text-text-default pr-10 font-normal"
                       style={{ 
                         height: '48px',
-                        borderRadius: '24px'
+                        borderRadius: '24px',
+                        fontFamily: 'Noto Sans KR',
+                        fontWeight: '400',
+                        fontSize: '24px'
                       }}
                     />
                     <span className="absolute right-3 top-1/2 -translate-y-1/2 text-text-muted text-sm">cm</span>
@@ -444,7 +450,10 @@ export const ResultPage: React.FC = () => {
                         text-text-default pr-10 font-normal"
                       style={{ 
                         height: '48px',
-                        borderRadius: '24px'
+                        borderRadius: '24px',
+                        fontFamily: 'Noto Sans KR',
+                        fontWeight: '400',
+                        fontSize: '24px'
                       }}
                     />
                     <span className="absolute right-3 top-1/2 -translate-y-1/2 text-text-muted text-sm">kg</span>
@@ -468,7 +477,10 @@ export const ResultPage: React.FC = () => {
                       text-text-default pr-10 font-bold"
                     style={{ 
                       height: '48px',
-                      borderRadius: '24px'
+                      borderRadius: '24px',
+                      fontFamily: 'Noto Sans KR',
+                      fontWeight: '400',
+                      fontSize: '24px'
                     }}
                   />
                   <span className="absolute right-3 top-1/2 -translate-y-1/2 text-text-muted text-sm">kg</span>
@@ -494,7 +506,8 @@ export const ResultPage: React.FC = () => {
                     height: '48px',
                     borderRadius: '24px',
                     fontFamily: 'Noto Sans KR',
-                    fontWeight: '500',
+                    fontWeight: '400',
+                    fontSize: '24px',
                     color: editableParams.type ? '#000000' : '#938288',
                     backgroundImage: `url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='m6 8 4 4 4-4'/%3e%3c/svg%3e")`, 
                     backgroundPosition: 'right 0.5rem center', 
@@ -602,8 +615,11 @@ export const ResultPage: React.FC = () => {
                         backgroundImage: `url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='m6 8 4 4 4-4'/%3e%3c/svg%3e")`, 
                         backgroundPosition: 'right 0.5rem center', 
                         backgroundRepeat: 'no-repeat', 
-                        backgroundSize: '1em 1em' 
+                        backgroundSize: '1em 1em',
+                        outline: 'none'
                       }}
+                      onFocus={(e) => e.target.style.border = '1px solid #9CA3AF'}
+                      onBlur={(e) => e.target.style.border = 'none'}
                     >
                       {Array.from({ length: 37 }, (_, i) => (
                         <option key={i + 4} value={i + 4}>

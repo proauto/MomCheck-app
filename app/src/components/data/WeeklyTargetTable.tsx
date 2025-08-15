@@ -28,12 +28,16 @@ export const WeeklyTargetTable: React.FC<WeeklyTargetTableProps> = ({
 }) => {
   const displayRows = expanded ? rows : rows.slice(0, 11);
   
-  // 11주차까지 보이도록 높이 계산 (모바일에서 고정 높이로 흔들림 방지)
-  const baseHeight = expanded ? 'auto' : '510px';
+  // 11주차까지 보이도록 높이 계산 (웹에서만 고정 높이로 흔들림 방지, 모바일에서는 스크롤 제거)
+  const baseHeight = expanded ? 'auto' : (window.innerWidth < 640 ? 'auto' : '510px');
   
   return (
     <Card className="!p-0" style={{ height: baseHeight, display: 'flex', flexDirection: 'column', minHeight: baseHeight }}>
-      <div className="overflow-x-auto flex-1" style={{ minHeight: expanded ? 'auto' : '446px', maxHeight: expanded ? 'none' : '446px', overflow: expanded ? 'visible' : 'hidden' }}>
+      <div className="overflow-x-auto flex-1" style={{ 
+        minHeight: expanded ? 'auto' : (window.innerWidth < 640 ? 'auto' : '446px'), 
+        maxHeight: expanded ? 'none' : (window.innerWidth < 640 ? 'none' : '446px'), 
+        overflow: expanded ? 'visible' : (window.innerWidth < 640 ? 'visible' : 'hidden') 
+      }}>
         <table className="w-full text-sm border-separate border-spacing-0">
           <colgroup>
             <col className="w-1/5" />

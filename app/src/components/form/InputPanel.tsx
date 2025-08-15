@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Card } from '../layout/Card';
 import { Button } from '../common/Button';
 
@@ -21,6 +21,8 @@ export const InputPanel: React.FC<InputPanelProps> = ({
   onChange,
   onSubmit
 }) => {
+  const [isDropdownLoading, setIsDropdownLoading] = useState(false);
+  const [isDropdownReady, setIsDropdownReady] = useState(true);
   const isValid = () => {
     return (
       values.week !== undefined && values.week >= 4 && values.week <= 40 &&
@@ -42,11 +44,25 @@ export const InputPanel: React.FC<InputPanelProps> = ({
                 현재 임신 주수
               </label>
               <div className="relative">
+              {isDropdownLoading && (
+                <div className="absolute inset-0 bg-white bg-opacity-75 flex items-center justify-center z-10 rounded-3xl">
+                  <div className="w-4 h-4 border-2 border-brand-500 border-t-transparent rounded-full animate-spin"></div>
+                </div>
+              )}
               <select
                 value={values.week || ''}
                 onChange={(e) => {
                   const val = e.target.value;
                   onChange({ week: val === '' ? undefined : Number(val) });
+                }}
+                onFocus={() => {
+                  setIsDropdownLoading(true);
+                  setIsDropdownReady(false);
+                  // 드롭다운 데이터 로딩 시뮬레이션
+                  setTimeout(() => {
+                    setIsDropdownLoading(false);
+                    setIsDropdownReady(true);
+                  }, 1000);
                 }}
                 className="w-full px-md bg-bg-field border border-border-subtle
                   focus:outline-none focus:ring-2 focus:ring-brand-500 focus:border-transparent
@@ -86,9 +102,10 @@ export const InputPanel: React.FC<InputPanelProps> = ({
                   placeholder=""
                   min={120}
                   max={210}
+                  disabled={!isDropdownReady}
                   className="w-full px-md bg-bg-field border border-border-subtle
                     focus:outline-none focus:ring-2 focus:ring-brand-500 focus:border-transparent
-                    text-text-default pr-10 sm:font-medium font-normal"
+                    text-text-default pr-10 sm:font-medium font-normal disabled:opacity-50 disabled:cursor-not-allowed"
                   style={{ 
                     height: '48px',
                     borderRadius: '24px',
@@ -112,9 +129,10 @@ export const InputPanel: React.FC<InputPanelProps> = ({
                   min={30}
                   max={150}
                   step={0.1}
+                  disabled={!isDropdownReady}
                   className="w-full px-md bg-bg-field border border-border-subtle
                     focus:outline-none focus:ring-2 focus:ring-brand-500 focus:border-transparent
-                    text-text-default pr-10 sm:font-medium font-normal"
+                    text-text-default pr-10 sm:font-medium font-normal disabled:opacity-50 disabled:cursor-not-allowed"
                   style={{ 
                     height: '48px',
                     borderRadius: '24px',
@@ -140,12 +158,15 @@ export const InputPanel: React.FC<InputPanelProps> = ({
                 min={30}
                 max={150}
                 step={0.1}
+                disabled={!isDropdownReady}
                 className="w-full px-md bg-bg-field border border-border-subtle
                   focus:outline-none focus:ring-2 focus:ring-brand-500 focus:border-transparent
-                  text-text-default pr-10 font-medium"
+                  text-text-default pr-10 font-medium disabled:opacity-50 disabled:cursor-not-allowed"
                 style={{ 
                   height: '48px',
-                  borderRadius: '24px'
+                  borderRadius: '24px',
+                  fontFamily: 'Noto Sans KR',
+                  fontSize: window.innerWidth < 640 ? '24px' : '16px'
                 }}
               />
               <span className="absolute right-3 top-1/2 -translate-y-1/2 text-text-muted text-sm">kg</span>
@@ -162,9 +183,10 @@ export const InputPanel: React.FC<InputPanelProps> = ({
                 const val = e.target.value;
                 onChange({ type: val === '' ? undefined : (val as 'singleton' | 'twin' | 'triplet' | 'quadruplet') });
               }}
+              disabled={!isDropdownReady}
               className="w-full px-md bg-bg-field border border-border-subtle
                 focus:outline-none focus:ring-2 focus:ring-brand-500 focus:border-transparent
-                text-text-default appearance-none"
+                text-text-default appearance-none disabled:opacity-50 disabled:cursor-not-allowed"
               style={{ 
                 height: '48px',
                 borderRadius: '24px',

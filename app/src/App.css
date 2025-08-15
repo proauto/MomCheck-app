@@ -1,42 +1,5 @@
-/* Portrait orientation lock for mobile */
-@media screen and (max-width: 640px) {
-  html {
-    transform: rotate(0deg);
-  }
-  
-  /* Force portrait orientation on mobile devices */
-  @media screen and (orientation: landscape) and (max-width: 640px) {
-    html {
-      /* Show a message or force portrait mode */
-      -webkit-transform: rotate(-90deg);
-      -moz-transform: rotate(-90deg);
-      -o-transform: rotate(-90deg);
-      -ms-transform: rotate(-90deg);
-      transform: rotate(-90deg);
-      width: 100vh;
-      height: 100vw;
-      overflow-x: hidden;
-    }
-    
-    body {
-      width: 100vh;
-      height: 100vw;
-      -webkit-transform: rotate(90deg);
-      -moz-transform: rotate(90deg);
-      -o-transform: rotate(90deg);
-      -ms-transform: rotate(90deg);
-      transform: rotate(90deg);
-      transform-origin: left top;
-      margin: 0;
-      position: absolute;
-      top: 100%;
-      left: 0;
-    }
-  }
-}
-
-/* Alternative approach - simply prevent landscape on mobile */
-@media screen and (orientation: landscape) and (max-width: 896px) and (max-height: 640px) {
+/* 앱(모바일)에서만 화면 회전 방지 - 웹에는 영향 없음 */
+@media screen and (orientation: landscape) and (max-width: 640px) {
   body::before {
     content: "세로 모드로 회전해주세요";
     position: fixed;
@@ -50,6 +13,7 @@
     z-index: 9999;
     font-size: 18px;
     text-align: center;
+    font-family: 'Noto Sans KR', sans-serif;
   }
   
   #root {

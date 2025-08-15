@@ -1,0 +1,36 @@
+{
+  "name": "MomCheck - 임신 체중 관리",
+  "short_name": "MomCheck",
+  "description": "임신 중 건강한 체중 관리를 위한 계산기",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#F7F0EC",
+  "theme_color": "#EC407A",
+  "orientation": "portrait",
+  "scope": "/",
+  "lang": "ko",
+  "dir": "ltr",
+  "icons": [
+    {
+      "src": "/favicon.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "maskable any"
+    },
+    {
+      "src": "/favicon.png", 
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable any"
+    }
+  ],
+  "categories": ["health", "lifestyle", "medical"],
+  "screenshots": [
+    {
+      "src": "/preview.png",
+      "sizes": "1200x630",
+      "type": "image/png",
+      "form_factor": "wide"
+    }
+  ]
+}

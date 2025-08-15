@@ -99,7 +99,7 @@ export const WeightProgressChart: React.FC<WeightProgressChartProps> = ({
   };
   
   return (
-    <Card style={{ outline: 'none', paddingLeft: '7.5px' }}>
+    <Card style={{ outline: 'none', paddingLeft: '-2.5px' }}>
       <ResponsiveContainer width="100%" height={300}>
         <ComposedChart data={data} margin={{ top: 10, right: 10, left: 10, bottom: 10 }} style={{ outline: 'none' }}>
           <XAxis 
@@ -124,6 +124,7 @@ export const WeightProgressChart: React.FC<WeightProgressChartProps> = ({
             content={<CustomTooltip />}
             animationDuration={0}
             isAnimationActive={false}
+            cursor={false}
           />
           
           <defs>

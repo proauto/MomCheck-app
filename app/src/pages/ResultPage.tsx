@@ -391,7 +391,7 @@ export const ResultPage: React.FC = () => {
                     borderRadius: '24px',
                     fontFamily: 'Noto Sans KR',
                     fontWeight: '400',
-                    fontSize: '24px',
+                    fontSize: '16px',
                     color: editableParams.week ? '#000000' : '#938288',
                     backgroundImage: `url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='m6 8 4 4 4-4'/%3e%3c/svg%3e")`, 
                     backgroundPosition: 'right 0.5rem center', 
@@ -426,7 +426,7 @@ export const ResultPage: React.FC = () => {
                         borderRadius: '24px',
                         fontFamily: 'Noto Sans KR',
                         fontWeight: '400',
-                        fontSize: '24px'
+                        fontSize: '16px'
                       }}
                     />
                     <span className="absolute right-3 top-1/2 -translate-y-1/2 text-text-muted text-sm">cm</span>
@@ -450,7 +450,7 @@ export const ResultPage: React.FC = () => {
                         borderRadius: '24px',
                         fontFamily: 'Noto Sans KR',
                         fontWeight: '400',
-                        fontSize: '24px'
+                        fontSize: '16px'
                       }}
                     />
                     <span className="absolute right-3 top-1/2 -translate-y-1/2 text-text-muted text-sm">kg</span>
@@ -477,7 +477,7 @@ export const ResultPage: React.FC = () => {
                       borderRadius: '24px',
                       fontFamily: 'Noto Sans KR',
                       fontWeight: '400',
-                      fontSize: '24px'
+                      fontSize: '16px'
                     }}
                   />
                   <span className="absolute right-3 top-1/2 -translate-y-1/2 text-text-muted text-sm">kg</span>
@@ -504,7 +504,7 @@ export const ResultPage: React.FC = () => {
                     borderRadius: '24px',
                     fontFamily: 'Noto Sans KR',
                     fontWeight: '400',
-                    fontSize: '24px',
+                    fontSize: '16px',
                     color: editableParams.type ? '#000000' : '#938288',
                     backgroundImage: `url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='m6 8 4 4 4-4'/%3e%3c/svg%3e")`, 
                     backgroundPosition: 'right 0.5rem center', 

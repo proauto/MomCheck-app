@@ -178,7 +178,7 @@ export const WeightProgressChart: React.FC<WeightProgressChartProps> = ({
                   />
                 );
               }
-              return null;
+              return <g />; // null 대신 빈 SVG 그룹 반환
             }}
             connectNulls={false}
             aria-label="실제 체중 변화"

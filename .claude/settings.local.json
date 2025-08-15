@@ -30,9 +30,12 @@
       "Bash(git rm:*)",
       "Bash(git reset:*)",
       "Bash(mv:*)",
-      "Bash(npx vercel:*)"
+      "Bash(npx vercel:*)",
+      "Bash(npm run preview:*)",
+      "Bash(curl:*)"
     ],
     "deny": [],
-    "ask": []
+    "ask": [],
+    "defaultMode": "acceptEdits"
   }
 }

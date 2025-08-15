@@ -20,9 +20,73 @@ export const WeeklyInfoPage: React.FC = () => {
 
   return (
     <>
-      <TopBar logoSrc={logoImg} title="주수별 맞춤정보" />
+      {/* 웹에서만 TopBar 표시 */}
+      <div className="hidden sm:block">
+        <TopBar logoSrc={logoImg} title="주수별 맞춤정보" />
+      </div>
+      
       <Page title="주수별 맞춤정보">
-        <div className="min-h-[calc(100vh-64px)] bg-gray-50 pb-20">
+        {/* 모바일 레이아웃 (앱 버전) */}
+        <div className="min-h-screen bg-gray-50 sm:hidden overflow-x-hidden">
+          <div className="h-screen overflow-y-auto overflow-x-hidden pb-16">
+            {/* 주수별 정보 컨텐츠 - 좌우 간격 10px */}
+            <div className="px-2.5 py-md">
+              <WeeklyInfo currentWeek={selectedWeek} />
+            </div>
+
+            {/* 추가 안내 */}
+            <div className="px-2.5 py-md">
+              <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
+                <div className="flex items-start">
+                  <svg className="w-5 h-5 text-blue-500 mr-3 mt-0.5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                    <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clipRule="evenodd" />
+                  </svg>
+                  <div>
+                    <h4 className="text-sm font-medium text-blue-900 mb-1">
+                      개인차 안내
+                    </h4>
+                    <p className="text-sm text-blue-700">
+                      임신 과정은 개인차가 있을 수 있습니다. 
+                      궁금한 사항이나 우려되는 증상이 있다면 반드시 담당 의료진과 상담하세요.
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* 앱용 하단 네비게이션 바 - 높이 64px */}
+          <div className="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 h-16">
+            <div className="flex h-full">
+              <button
+                onClick={() => window.location.href = '/'}
+                className="flex-1 flex flex-col items-center justify-center"
+              >
+                <svg className="w-6 h-6 text-gray-400 mb-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} 
+                    d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" 
+                  />
+                </svg>
+                <span className="text-xs text-gray-400">홈</span>
+              </button>
+              
+              <button
+                onClick={() => window.location.href = '/weekly-info'}
+                className="flex-1 flex flex-col items-center justify-center"
+              >
+                <svg className="w-6 h-6 text-brand-500 mb-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} 
+                    d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" 
+                  />
+                </svg>
+                <span className="text-xs text-brand-500 font-medium">주수별정보</span>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        {/* 웹 레이아웃 (기존 버전) */}
+        <div className="min-h-[calc(100vh-64px)] bg-gray-50 pb-20 hidden sm:block">
           {/* 주차 선택 영역 */}
           <div className="bg-white border-b border-gray-200 px-lg py-md">
             <div className="flex items-center justify-between">
@@ -92,7 +156,11 @@ export const WeeklyInfoPage: React.FC = () => {
           </div>
         </div>
       </Page>
-      <BottomNav />
+      
+      {/* 웹에서만 BottomNav 표시 */}
+      <div className="hidden sm:block">
+        <BottomNav />
+      </div>
     </>
   );
 };

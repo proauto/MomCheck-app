@@ -196,9 +196,9 @@ export const ResultPage: React.FC = () => {
       
       <Page title="체중 관리 결과">
         {/* 모바일 레이아웃 (앱 버전) */}
-        <div className="min-h-screen bg-gray-50 sm:hidden">
+        <div className="min-h-screen bg-gray-50 sm:hidden overflow-x-hidden">
           {/* Right Part 컨텐츠를 앱 전체 화면에 맞게 - 스크롤 가능 */}
-          <div className="h-screen overflow-y-auto pb-[123px]">
+          <div className="h-screen overflow-y-auto overflow-x-hidden pb-16">
             {activeTab === 'result' ? (
               <div className="space-y-6 p-4">
                 {/* 상태 메시지 (공유 버튼 제거) */}
@@ -299,14 +299,14 @@ export const ResultPage: React.FC = () => {
               </div>
             ) : (
               /* 주수별 맞춤정보 컨텐츠 */
-              <div className="p-4">
+              <div className="p-2.5">
                 <WeeklyInfo currentWeek={params.week} />
               </div>
             )}
           </div>
           
-          {/* 앱용 하단 네비게이션 바 - 높이 123px */}
-          <div className="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200" style={{ height: '123px' }}>
+          {/* 앱용 하단 네비게이션 바 - 높이 64px (주수별정보와 동일) */}
+          <div className="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 h-16">
             <div className="flex h-full">
               <button
                 onClick={() => window.location.href = window.location.pathname + window.location.search}
@@ -314,10 +314,10 @@ export const ResultPage: React.FC = () => {
               >
                 <svg className="w-6 h-6 text-brand-500 mb-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} 
-                    d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" 
+                    d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" 
                   />
                 </svg>
-                <span className="text-sm text-brand-500 font-medium">홈</span>
+                <span className="text-xs text-brand-500 font-medium">홈</span>
               </button>
               
               <button
@@ -329,7 +329,7 @@ export const ResultPage: React.FC = () => {
                     d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" 
                   />
                 </svg>
-                <span className="text-sm text-gray-400">주수별정보</span>
+                <span className="text-xs text-gray-400">주수별정보</span>
               </button>
             </div>
           </div>

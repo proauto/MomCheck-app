@@ -33,7 +33,7 @@ export const WeeklyTargetTable: React.FC<WeeklyTargetTableProps> = ({
   
   return (
     <Card className="!p-0" style={{ height: baseHeight, display: 'flex', flexDirection: 'column', minHeight: baseHeight }}>
-      <div className="overflow-x-auto flex-1" style={{ minHeight: expanded ? 'auto' : '446px' }}>
+      <div className="overflow-x-auto flex-1" style={{ minHeight: expanded ? 'auto' : '446px', maxHeight: expanded ? 'none' : '446px', overflow: expanded ? 'visible' : 'hidden' }}>
         <table className="w-full text-sm border-separate border-spacing-0">
           <colgroup>
             <col className="w-1/5" />

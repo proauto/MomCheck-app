@@ -91,7 +91,9 @@ export const InputPanel: React.FC<InputPanelProps> = ({
                     text-text-default pr-10 sm:font-medium font-normal"
                   style={{ 
                     height: '48px',
-                    borderRadius: '24px'
+                    borderRadius: '24px',
+                    fontFamily: 'Noto Sans KR',
+                    fontSize: window.innerWidth < 640 ? '24px' : '16px'
                   }}
                 />
                 <span className="absolute right-3 top-1/2 -translate-y-1/2 text-text-muted text-sm">cm</span>
@@ -115,7 +117,9 @@ export const InputPanel: React.FC<InputPanelProps> = ({
                     text-text-default pr-10 sm:font-medium font-normal"
                   style={{ 
                     height: '48px',
-                    borderRadius: '24px'
+                    borderRadius: '24px',
+                    fontFamily: 'Noto Sans KR',
+                    fontSize: window.innerWidth < 640 ? '24px' : '16px'
                   }}
                 />
                 <span className="absolute right-3 top-1/2 -translate-y-1/2 text-text-muted text-sm">kg</span>

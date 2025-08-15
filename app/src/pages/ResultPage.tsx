@@ -48,7 +48,8 @@ export const ResultPage: React.FC = () => {
   const [tableExpanded, setTableExpanded] = React.useState(false);
   const [isLoading, setIsLoading] = React.useState(() => {
     // URL에서 온 경우만 로딩 화면 표시 (첫 페이지 > 결과 페이지)
-    return window.location.search.includes('week=');
+    // 결과페이지 내부 네비게이션에서는 로딩 안함
+    return window.location.search.includes('week=') && !sessionStorage.getItem('skipResultLoading');
   });
   
   // 실제 계산에 사용할 고정된 파라미터 (수정하기를 눌렀을 때만 업데이트)
@@ -259,8 +260,8 @@ export const ResultPage: React.FC = () => {
                       <select
                         value={donutWeek}
                         onChange={(e) => setDonutWeek(Number(e.target.value))}
-                        className="px-3 py-2 text-sm bg-gray-200 rounded-3xl sm:w-auto w-28"
-                        style={{ minWidth: '120px' }}
+                        className="px-3 py-2 text-sm bg-gray-200 rounded-3xl sm:w-auto w-28 focus:outline-none border-0"
+                        style={{ minWidth: '120px', border: 'none', outline: 'none' }}
                       >
                         {Array.from({ length: 37 }, (_, i) => (
                           <option key={i + 4} value={i + 4}>
@@ -328,7 +329,22 @@ export const ResultPage: React.FC = () => {
             <div className="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 h-16">
             <div className="flex h-full">
               <button
-                onClick={() => window.location.href = window.location.pathname + window.location.search}
+                onClick={() => window.location.href = '/'}
+                className="flex-1 flex flex-col items-center justify-center"
+              >
+                <svg className="w-6 h-6 text-gray-400 mb-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} 
+                    d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" 
+                  />
+                </svg>
+                <span className="text-xs text-gray-400">홈</span>
+              </button>
+              
+              <button
+                onClick={() => {
+                  sessionStorage.setItem('skipResultLoading', 'true');
+                  window.location.href = window.location.pathname + window.location.search;
+                }}
                 className="flex-1 flex flex-col items-center justify-center"
               >
                 <svg className="w-6 h-6 text-brand-500 mb-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">

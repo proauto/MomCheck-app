@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Card } from '../layout/Card';
 import { ShareButton } from './ShareButton';
 import { 
@@ -16,6 +16,10 @@ export const WeeklyInfo: React.FC<WeeklyInfoProps> = ({ currentWeek }) => {
   const [selectedWeek, setSelectedWeek] = useState(currentWeek);
   const [weeklyData, setWeeklyData] = useState<WeeklyData[]>([]);
   const [loading, setLoading] = useState(false);
+  const sliderRef = useRef<HTMLDivElement>(null);
+  const [isDragging, setIsDragging] = useState(false);
+  const [startX, setStartX] = useState(0);
+  const [scrollLeft, setScrollLeft] = useState(0);
   
   // 마크다운 파일에서 데이터 로드
   useEffect(() => {
@@ -72,8 +76,9 @@ export const WeeklyInfo: React.FC<WeeklyInfoProps> = ({ currentWeek }) => {
   const scrollToWeek = (direction: 'left' | 'right') => {
     const container = document.getElementById('week-slider');
     if (container) {
-      const containerWidth = container.clientWidth;
-      const scrollAmount = containerWidth * 0.8; // 컨테이너 너비의 80%만큼 스크롤
+      const buttonWidth = 52; // 버튼 너비 + 간격 (48px + 4px)
+      const visibleButtons = Math.floor(container.clientWidth / buttonWidth);
+      const scrollAmount = buttonWidth * Math.max(1, visibleButtons - 1); // 최소 1개, 최대 보이는 버튼 수 - 1개만큼 이동
       const currentScroll = container.scrollLeft;
       const maxScroll = container.scrollWidth - container.clientWidth;
       
@@ -89,6 +94,37 @@ export const WeeklyInfo: React.FC<WeeklyInfoProps> = ({ currentWeek }) => {
         behavior: 'smooth'
       });
     }
+  };
+
+  // 드래그 스크롤 이벤트 핸들러들
+  const handleMouseDown = (e: React.MouseEvent) => {
+    if (!sliderRef.current) return;
+    setIsDragging(true);
+    setStartX(e.pageX - sliderRef.current.offsetLeft);
+    setScrollLeft(sliderRef.current.scrollLeft);
+    sliderRef.current.style.cursor = 'grabbing';
+  };
+
+  const handleMouseLeave = () => {
+    setIsDragging(false);
+    if (sliderRef.current) {
+      sliderRef.current.style.cursor = 'grab';
+    }
+  };
+
+  const handleMouseUp = () => {
+    setIsDragging(false);
+    if (sliderRef.current) {
+      sliderRef.current.style.cursor = 'grab';
+    }
+  };
+
+  const handleMouseMove = (e: React.MouseEvent) => {
+    if (!isDragging || !sliderRef.current) return;
+    e.preventDefault();
+    const x = e.pageX - sliderRef.current.offsetLeft;
+    const walk = (x - startX) * 1.5; // 드래그 속도 조절
+    sliderRef.current.scrollLeft = scrollLeft - walk;
   };
 
   return (
@@ -113,39 +149,48 @@ export const WeeklyInfo: React.FC<WeeklyInfoProps> = ({ currentWeek }) => {
 
       {/* 주수 슬라이더 */}
       <div className="relative">
+        {/* 좌측 화살표 - 웹에서만 표시 */}
         <button
           onClick={() => scrollToWeek('left')}
-          className="absolute left-0 top-1/2 -translate-y-1/2 z-10 w-8 h-8 flex items-center justify-center bg-white shadow-md rounded-full"
+          className="hidden sm:flex absolute left-0 top-1/2 -translate-y-1/2 z-10 w-10 h-10 items-center justify-center bg-white shadow-lg rounded-full hover:shadow-xl transition-shadow"
           style={{ color: '#EC407A' }}
         >
-          ←
+          <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+          </svg>
         </button>
         
         <div 
           id="week-slider"
-          className="overflow-x-auto mx-8"
+          ref={sliderRef}
+          className="overflow-x-auto sm:mx-12 mx-0 week-slider-container"
           style={{ 
-            scrollbarWidth: typeof window !== 'undefined' && window.innerWidth >= 640 ? 'thin' : 'none', 
-            msOverflowStyle: typeof window !== 'undefined' && window.innerWidth >= 640 ? 'auto' : 'none',
             WebkitOverflowScrolling: 'touch',
-            scrollBehavior: 'smooth'
+            scrollBehavior: 'smooth',
+            cursor: typeof window !== 'undefined' && window.innerWidth >= 640 ? 'grab' : 'auto'
           }}
+          onMouseDown={handleMouseDown}
+          onMouseLeave={handleMouseLeave}
+          onMouseUp={handleMouseUp}
+          onMouseMove={handleMouseMove}
         >
-          <div className="flex space-x-2 py-2" style={{ minWidth: 'max-content' }}>
+          <div className="flex space-x-1 sm:space-x-2 py-2" style={{ minWidth: 'max-content' }}>
             {weeks.map(week => (
               <button
                 key={week}
                 onClick={() => handleWeekChange(week)}
-                className={`flex-shrink-0 w-12 h-12 rounded-full flex items-center justify-center transition-colors ${
+                onMouseDown={(e) => e.stopPropagation()} // 버튼 클릭 시 드래그 방지
+                className={`flex-shrink-0 w-11 h-11 sm:w-12 sm:h-12 rounded-full flex items-center justify-center transition-all select-none ${
                   selectedWeek === week 
-                    ? 'text-white' 
+                    ? 'text-white shadow-md scale-110' 
                     : 'text-text-default hover:bg-gray-100'
                 }`}
                 style={{
                   backgroundColor: selectedWeek === week ? '#EC407A' : 'transparent',
                   fontFamily: 'Noto Sans KR',
                   fontWeight: selectedWeek === week ? '600' : '400',
-                  fontSize: '14px'
+                  fontSize: '14px',
+                  userSelect: 'none'
                 }}
               >
                 {week}
@@ -154,12 +199,15 @@ export const WeeklyInfo: React.FC<WeeklyInfoProps> = ({ currentWeek }) => {
           </div>
         </div>
 
+        {/* 우측 화살표 - 웹에서만 표시 */}
         <button
           onClick={() => scrollToWeek('right')}
-          className="absolute right-0 top-1/2 -translate-y-1/2 z-10 w-8 h-8 flex items-center justify-center bg-white shadow-md rounded-full"
+          className="hidden sm:flex absolute right-0 top-1/2 -translate-y-1/2 z-10 w-10 h-10 items-center justify-center bg-white shadow-lg rounded-full hover:shadow-xl transition-shadow"
           style={{ color: '#EC407A' }}
         >
-          →
+          <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+          </svg>
         </button>
       </div>
 

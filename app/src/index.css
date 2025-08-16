@@ -111,3 +111,38 @@ svg {
 svg:focus {
   outline: none !important;
 }
+
+/* 주수 슬라이더 스크롤바 숨기기 - 웹에서만 */
+@media (min-width: 640px) {
+  .week-slider-container {
+    -ms-overflow-style: none;  /* IE and Edge */
+    scrollbar-width: none;  /* Firefox */
+  }
+  
+  .week-slider-container::-webkit-scrollbar {
+    display: none;  /* Chrome, Safari and Opera */
+  }
+}
+
+/* 모바일에서는 스크롤바 표시 */
+@media (max-width: 639px) {
+  .week-slider-container {
+    -ms-overflow-style: auto;
+    scrollbar-width: thin;
+  }
+  
+  .week-slider-container::-webkit-scrollbar {
+    display: block;
+    height: 4px;
+  }
+  
+  .week-slider-container::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 10px;
+  }
+  
+  .week-slider-container::-webkit-scrollbar-thumb {
+    background: #EC407A;
+    border-radius: 10px;
+  }
+}

@@ -108,36 +108,26 @@ export const WeeklyInfo: React.FC<WeeklyInfoProps> = ({ currentWeek }) => {
   const handleMouseDown = (e: React.MouseEvent) => {
     if (!sliderRef.current || window.innerWidth < 640) return; // 모바일에서는 드래그 비활성화
     
+    // 버튼 클릭 무시
+    const target = e.target as HTMLElement;
+    if (target.tagName === 'BUTTON' || target.closest('button')) {
+      return;
+    }
+    
     setIsDragging(true);
     const rect = sliderRef.current.getBoundingClientRect();
     setStartX(e.clientX - rect.left);
     setScrollLeft(sliderRef.current.scrollLeft);
     sliderRef.current.style.cursor = 'grabbing';
     sliderRef.current.style.scrollBehavior = 'auto'; // 드래그 중 smooth scroll 비활성화
+    
+    // 전역 이벤트 리스너 추가
+    document.addEventListener('mousemove', handleGlobalMouseMove);
+    document.addEventListener('mouseup', handleGlobalMouseUp);
   };
 
-  const handleMouseLeave = () => {
-    if (isDragging && sliderRef.current) {
-      sliderRef.current.style.scrollBehavior = 'smooth';
-    }
-    setIsDragging(false);
-    if (sliderRef.current && window.innerWidth >= 640) {
-      sliderRef.current.style.cursor = 'grab';
-    }
-  };
-
-  const handleMouseUp = () => {
-    if (sliderRef.current) {
-      sliderRef.current.style.scrollBehavior = 'smooth';
-    }
-    setIsDragging(false);
-    if (sliderRef.current && window.innerWidth >= 640) {
-      sliderRef.current.style.cursor = 'grab';
-    }
-  };
-
-  const handleMouseMove = (e: React.MouseEvent) => {
-    if (!isDragging || !sliderRef.current || window.innerWidth < 640) return;
+  const handleGlobalMouseMove = (e: MouseEvent) => {
+    if (!isDragging || !sliderRef.current) return;
     
     e.preventDefault();
     const rect = sliderRef.current.getBoundingClientRect();
@@ -149,6 +139,26 @@ export const WeeklyInfo: React.FC<WeeklyInfoProps> = ({ currentWeek }) => {
     const maxScroll = sliderRef.current.scrollWidth - sliderRef.current.clientWidth;
     sliderRef.current.scrollLeft = Math.max(0, Math.min(newScrollLeft, maxScroll));
   };
+
+  const handleGlobalMouseUp = () => {
+    if (sliderRef.current) {
+      sliderRef.current.style.scrollBehavior = 'smooth';
+      sliderRef.current.style.cursor = 'grab';
+    }
+    setIsDragging(false);
+    
+    // 전역 이벤트 리스너 제거
+    document.removeEventListener('mousemove', handleGlobalMouseMove);
+    document.removeEventListener('mouseup', handleGlobalMouseUp);
+  };
+
+  // 컴포넌트 언마운트 시 이벤트 리스너 정리
+  useEffect(() => {
+    return () => {
+      document.removeEventListener('mousemove', handleGlobalMouseMove);
+      document.removeEventListener('mouseup', handleGlobalMouseUp);
+    };
+  }, []);
 
   return (
     <div className="space-y-xl sm:px-24 px-0">
@@ -193,16 +203,12 @@ export const WeeklyInfo: React.FC<WeeklyInfoProps> = ({ currentWeek }) => {
             cursor: typeof window !== 'undefined' && window.innerWidth >= 640 ? (isDragging ? 'grabbing' : 'grab') : 'auto'
           }}
           onMouseDown={handleMouseDown}
-          onMouseLeave={handleMouseLeave}
-          onMouseUp={handleMouseUp}
-          onMouseMove={handleMouseMove}
         >
           <div className="flex space-x-1 sm:space-x-2 py-2" style={{ minWidth: 'max-content' }}>
             {weeks.map(week => (
               <button
                 key={week}
                 onClick={() => handleWeekChange(week)}
-                onMouseDown={(e) => e.stopPropagation()} // 버튼 클릭 시 드래그 방지
                 className={`flex-shrink-0 w-11 h-11 sm:w-12 sm:h-12 rounded-full flex items-center justify-center transition-all select-none ${
                   selectedWeek === week 
                     ? 'text-white shadow-md scale-110' 

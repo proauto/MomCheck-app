@@ -112,43 +112,32 @@ svg:focus {
   outline: none !important;
 }
 
-/* 주수 슬라이더 - 웹에서는 드래그만, 스크롤 완전 제거 */
+/* 주수 슬라이더 - 네이티브 스크롤 + 스크롤바 숨기기 */
+.week-slider-container {
+  /* 기본적으로 모든 브라우저에서 스크롤바 숨기기 */
+  -ms-overflow-style: none;  /* IE and Edge */
+  scrollbar-width: none;  /* Firefox */
+}
+
+.week-slider-container::-webkit-scrollbar {
+  display: none;  /* Chrome, Safari and Opera */
+}
+
+/* 웹에서는 스크롤바만 숨기고 네이티브 스크롤 유지 */
 @media (min-width: 640px) {
   .week-slider-container {
-    -ms-overflow-style: none;  /* IE and Edge */
-    scrollbar-width: none;  /* Firefox */
-    overflow-x: hidden !important;  /* 기본 스크롤 강제 비활성화 */
-    scroll-behavior: auto !important;  /* smooth 스크롤 비활성화 */
-    -webkit-overflow-scrolling: auto !important;  /* 터치 스크롤 비활성화 */
-  }
-  
-  .week-slider-container::-webkit-scrollbar {
-    display: none;  /* Chrome, Safari and Opera */
+    /* 네이티브 스크롤 동작 유지, 스크롤바만 숨김 */
+    overflow-x: auto;
+    scroll-behavior: smooth;
+    -webkit-overflow-scrolling: touch; /* 부드러운 스크롤 */
   }
 }
 
-/* 모바일에서는 기본 스크롤만 */
+/* 모바일에서도 스크롤바 숨김 (앱 스타일) */
 @media (max-width: 639px) {
   .week-slider-container {
-    -ms-overflow-style: auto;
-    scrollbar-width: thin;
     overflow-x: auto;
     scroll-behavior: smooth;
     -webkit-overflow-scrolling: touch;
-  }
-  
-  .week-slider-container::-webkit-scrollbar {
-    display: block;
-    height: 4px;
-  }
-  
-  .week-slider-container::-webkit-scrollbar-track {
-    background: #f1f1f1;
-    border-radius: 10px;
-  }
-  
-  .week-slider-container::-webkit-scrollbar-thumb {
-    background: #EC407A;
-    border-radius: 10px;
   }
 }

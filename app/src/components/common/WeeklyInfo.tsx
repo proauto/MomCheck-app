@@ -70,118 +70,28 @@ export const WeeklyInfo: React.FC<WeeklyInfoProps> = ({ currentWeek }) => {
     setSelectedWeek(week);
   };
 
+  // 단순한 네이티브 스크롤 기반 화살표 기능
   const scrollToWeek = (direction: 'left' | 'right') => {
-    if (!sliderRef.current || typeof window === 'undefined') return;
+    if (!sliderRef.current) return;
     
     const container = sliderRef.current;
-    const buttonWidth = window.innerWidth >= 640 ? 56 : 48;
-    const scrollAmount = buttonWidth * 3;
+    const buttonWidth = typeof window !== 'undefined' && window.innerWidth >= 640 ? 56 : 48;
+    const scrollAmount = buttonWidth * 3; // 3개 버튼만큼 스크롤
+    const currentScroll = container.scrollLeft;
+    const maxScroll = container.scrollWidth - container.clientWidth;
     
-    if (window.innerWidth >= 640) {
-      // 웹: transform 기반
-      const maxTranslate = Math.min(0, -(container.scrollWidth - container.clientWidth));
-      let newTranslateX = translateX;
-      
-      if (direction === 'right') {
-        newTranslateX = Math.max(maxTranslate, translateX - scrollAmount);
-      } else {
-        newTranslateX = Math.min(0, translateX + scrollAmount);
-      }
-      
-      setTranslateX(newTranslateX);
-      
-      const content = container.querySelector('.week-slider-content') as HTMLElement;
-      if (content) {
-        content.style.transform = `translateX(${newTranslateX}px)`;
-        content.style.transition = 'transform 0.3s ease';
-      }
+    let newScrollPosition;
+    if (direction === 'right') {
+      newScrollPosition = Math.min(currentScroll + scrollAmount, maxScroll);
     } else {
-      // 모바일: 기존 scrollLeft 방식 유지
-      const currentScroll = container.scrollLeft;
-      const maxScroll = container.scrollWidth - container.clientWidth;
-      
-      let newScrollPosition;
-      if (direction === 'right') {
-        newScrollPosition = Math.min(currentScroll + scrollAmount, maxScroll);
-      } else {
-        newScrollPosition = Math.max(currentScroll - scrollAmount, 0);
-      }
-      
-      container.scrollTo({
-        left: newScrollPosition,
-        behavior: 'smooth'
-      });
+      newScrollPosition = Math.max(currentScroll - scrollAmount, 0);
     }
+    
+    container.scrollTo({
+      left: newScrollPosition,
+      behavior: 'smooth'
+    });
   };
-
-  // CSS Transform 기반 드래그 구현 (웹에서만)
-  const [translateX, setTranslateX] = useState(0);
-  const [isDragging, setIsDragging] = useState(false);
-  
-  useEffect(() => {
-    if (typeof window === 'undefined' || window.innerWidth < 640) return;
-
-    const slider = sliderRef.current;
-    if (!slider) return;
-
-    let startX = 0;
-    let startTranslateX = 0;
-    let animationId: number;
-
-    const updateTransform = (newTranslateX: number) => {
-      const maxTranslate = Math.min(0, -(slider.scrollWidth - slider.clientWidth));
-      const clampedTranslate = Math.max(maxTranslate, Math.min(0, newTranslateX));
-      setTranslateX(clampedTranslate);
-      
-      const content = slider.querySelector('.week-slider-content') as HTMLElement;
-      if (content) {
-        content.style.transform = `translateX(${clampedTranslate}px)`;
-        content.style.transition = isDragging ? 'none' : 'transform 0.3s ease';
-      }
-    };
-
-    const handleMouseDown = (e: MouseEvent) => {
-      const target = e.target as HTMLElement;
-      if (target.tagName === 'BUTTON' || target.closest('button')) return;
-
-      setIsDragging(true);
-      startX = e.clientX;
-      startTranslateX = translateX;
-      slider.style.cursor = 'grabbing';
-      
-      if (animationId) cancelAnimationFrame(animationId);
-    };
-
-    const handleMouseMove = (e: MouseEvent) => {
-      if (!isDragging) return;
-      
-      e.preventDefault();
-      const deltaX = e.clientX - startX;
-      const newTranslateX = startTranslateX + deltaX;
-      
-      animationId = requestAnimationFrame(() => updateTransform(newTranslateX));
-    };
-
-    const handleMouseUp = () => {
-      setIsDragging(false);
-      slider.style.cursor = 'grab';
-    };
-
-    // 전역 이벤트로 드래그 추적
-    const handleGlobalMouseMove = (e: MouseEvent) => handleMouseMove(e);
-    const handleGlobalMouseUp = () => handleMouseUp();
-
-    slider.addEventListener('mousedown', handleMouseDown);
-    document.addEventListener('mousemove', handleGlobalMouseMove);
-    document.addEventListener('mouseup', handleGlobalMouseUp);
-
-    return () => {
-      slider.removeEventListener('mousedown', handleMouseDown);
-      document.removeEventListener('mousemove', handleGlobalMouseMove);
-      document.removeEventListener('mouseup', handleGlobalMouseUp);
-      if (animationId) cancelAnimationFrame(animationId);
-    };
-  }, [translateX, isDragging]);
 
   return (
     <div className="space-y-xl sm:px-24 px-0">
@@ -221,23 +131,11 @@ export const WeeklyInfo: React.FC<WeeklyInfoProps> = ({ currentWeek }) => {
           ref={sliderRef}
           className="overflow-x-auto sm:mx-12 mx-0 week-slider-container"
           style={{ 
-            // 모바일용 설정 (앱에서만)
-            WebkitOverflowScrolling: typeof window !== 'undefined' && window.innerWidth < 640 ? 'touch' : 'auto',
-            // 웹에서는 드래그 중 스크롤 비활성화
-            scrollBehavior: typeof window !== 'undefined' && window.innerWidth >= 640 ? 'auto' : 'smooth',
-            cursor: typeof window !== 'undefined' && window.innerWidth >= 640 ? 'grab' : 'auto',
-            // 웹에서는 기본 스크롤 완전 비활성화
-            overflowX: typeof window !== 'undefined' && window.innerWidth >= 640 ? 'hidden' : 'auto'
+            WebkitOverflowScrolling: 'touch',
+            scrollBehavior: 'smooth'
           }}
         >
-          <div 
-            className="week-slider-content flex space-x-1 sm:space-x-2 py-2" 
-            style={{ 
-              minWidth: 'max-content',
-              transform: typeof window !== 'undefined' && window.innerWidth >= 640 ? `translateX(${translateX}px)` : 'none',
-              transition: typeof window !== 'undefined' && window.innerWidth >= 640 && !isDragging ? 'transform 0.3s ease' : 'none'
-            }}
-          >
+          <div className="flex space-x-1 sm:space-x-2 py-2" style={{ minWidth: 'max-content' }}>
             {weeks.map(week => (
               <button
                 key={week}

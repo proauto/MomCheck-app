@@ -80,6 +80,16 @@ export const WeeklyInfo: React.FC<WeeklyInfoProps> = ({ currentWeek }) => {
     const currentScroll = container.scrollLeft;
     const maxScroll = container.scrollWidth - container.clientWidth;
     
+    // 디버깅 로그
+    console.log('ScrollDebug:', {
+      direction,
+      currentScroll,
+      maxScroll,
+      scrollWidth: container.scrollWidth,
+      clientWidth: container.clientWidth,
+      canScroll: maxScroll > 0
+    });
+    
     let newScrollPosition;
     if (direction === 'right') {
       newScrollPosition = Math.min(currentScroll + scrollAmount, maxScroll);
@@ -132,7 +142,11 @@ export const WeeklyInfo: React.FC<WeeklyInfoProps> = ({ currentWeek }) => {
           className="overflow-x-auto sm:mx-12 mx-0 week-slider-container"
           style={{ 
             WebkitOverflowScrolling: 'touch',
-            scrollBehavior: 'smooth'
+            scrollBehavior: 'smooth',
+            // 명시적 스크롤 활성화
+            overflowX: 'auto',
+            display: 'block',
+            width: '100%'
           }}
         >
           <div className="flex space-x-1 sm:space-x-2 py-2" style={{ minWidth: 'max-content' }}>

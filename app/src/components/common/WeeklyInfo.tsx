@@ -72,7 +72,12 @@ export const WeeklyInfo: React.FC<WeeklyInfoProps> = ({ currentWeek }) => {
 
   // 단순한 네이티브 스크롤 기반 화살표 기능
   const scrollToWeek = (direction: 'left' | 'right') => {
-    if (!sliderRef.current) return;
+    alert(`화살표 ${direction} 클릭됨! 화면 크기: ${window.innerWidth}px`);
+    
+    if (!sliderRef.current) {
+      alert('sliderRef.current가 null입니다!');
+      return;
+    }
     
     const container = sliderRef.current;
     const buttonWidth = typeof window !== 'undefined' && window.innerWidth >= 640 ? 56 : 48;
@@ -89,6 +94,8 @@ export const WeeklyInfo: React.FC<WeeklyInfoProps> = ({ currentWeek }) => {
       clientWidth: container.clientWidth,
       canScroll: maxScroll > 0
     });
+    
+    alert(`스크롤 정보: current=${currentScroll}, max=${maxScroll}, canScroll=${maxScroll > 0}`);
     
     let newScrollPosition;
     if (direction === 'right') {
@@ -128,8 +135,12 @@ export const WeeklyInfo: React.FC<WeeklyInfoProps> = ({ currentWeek }) => {
         {/* 좌측 화살표 - 웹에서만 표시 */}
         <button
           onClick={() => scrollToWeek('left')}
-          className="hidden sm:flex absolute left-0 top-1/2 -translate-y-1/2 z-10 w-10 h-10 items-center justify-center bg-white shadow-lg rounded-full hover:shadow-xl transition-shadow"
-          style={{ color: '#EC407A' }}
+          className="hidden sm:flex absolute left-0 top-1/2 -translate-y-1/2 z-50 w-12 h-12 items-center justify-center bg-red-500 shadow-lg rounded-full hover:shadow-xl transition-shadow"
+          style={{ 
+            color: 'white',
+            backgroundColor: '#EC407A !important',
+            display: window.innerWidth >= 640 ? 'flex' : 'none'
+          }}
         >
           <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
@@ -176,8 +187,12 @@ export const WeeklyInfo: React.FC<WeeklyInfoProps> = ({ currentWeek }) => {
         {/* 우측 화살표 - 웹에서만 표시 */}
         <button
           onClick={() => scrollToWeek('right')}
-          className="hidden sm:flex absolute right-0 top-1/2 -translate-y-1/2 z-10 w-10 h-10 items-center justify-center bg-white shadow-lg rounded-full hover:shadow-xl transition-shadow"
-          style={{ color: '#EC407A' }}
+          className="hidden sm:flex absolute right-0 top-1/2 -translate-y-1/2 z-50 w-12 h-12 items-center justify-center bg-red-500 shadow-lg rounded-full hover:shadow-xl transition-shadow"
+          style={{ 
+            color: 'white',
+            backgroundColor: '#EC407A !important',
+            display: window.innerWidth >= 640 ? 'flex' : 'none'
+          }}
         >
           <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />

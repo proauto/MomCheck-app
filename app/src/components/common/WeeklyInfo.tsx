@@ -150,9 +150,10 @@ export const WeeklyInfo: React.FC<WeeklyInfoProps> = ({ currentWeek }) => {
   }, []);
 
   return (
-    <div className="space-y-xl sm:px-24 px-0">
+    <div className="space-y-xl">
       {/* 제목 */}
       <h2 
+        className="sm:px-24 px-0"
         style={{ 
           fontFamily: 'Noto Sans KR',
           fontWeight: '700',
@@ -169,12 +170,12 @@ export const WeeklyInfo: React.FC<WeeklyInfoProps> = ({ currentWeek }) => {
         )}
       </h2>
 
-      {/* 주수 슬라이더 */}
-      <div className="relative">
+      {/* 주수 슬라이더 - 전체 너비 활용 */}
+      <div className="relative w-full">
         {/* 좌측 화살표 - 웹에서만 표시 */}
         <button
           onClick={() => scrollToWeek('left')}
-          className="hidden sm:flex absolute left-0 top-1/2 -translate-y-1/2 z-10 w-10 h-10 items-center justify-center bg-white shadow-lg rounded-full hover:shadow-xl transition-shadow"
+          className="hidden sm:flex absolute left-4 top-1/2 -translate-y-1/2 z-20 w-10 h-10 items-center justify-center bg-white shadow-lg rounded-full hover:shadow-xl transition-shadow"
           style={{ color: '#EC407A' }}
         >
           <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -185,17 +186,13 @@ export const WeeklyInfo: React.FC<WeeklyInfoProps> = ({ currentWeek }) => {
         <div 
           id="week-slider"
           ref={sliderRef}
-          className="overflow-x-auto sm:mx-16 mx-0 week-slider-container"
+          className="overflow-x-auto week-slider-container"
           style={{ 
             WebkitOverflowScrolling: 'touch',
             scrollBehavior: 'smooth',
-            // 명시적 스크롤 활성화
-            overflowX: 'auto',
-            display: 'block',
-            width: '100%',
-            // 화살표 버튼을 위한 패딩
-            paddingLeft: typeof window !== 'undefined' && window.innerWidth >= 640 ? '48px' : '0',
-            paddingRight: typeof window !== 'undefined' && window.innerWidth >= 640 ? '48px' : '0',
+            // 화살표를 위한 패딩 - 웹에서만
+            paddingLeft: typeof window !== 'undefined' && window.innerWidth >= 640 ? '64px' : '8px',
+            paddingRight: typeof window !== 'undefined' && window.innerWidth >= 640 ? '64px' : '8px',
             // 웹에서 드래그 커서
             cursor: typeof window !== 'undefined' && window.innerWidth >= 640 ? 'grab' : 'auto'
           }}
@@ -227,7 +224,7 @@ export const WeeklyInfo: React.FC<WeeklyInfoProps> = ({ currentWeek }) => {
         {/* 우측 화살표 - 웹에서만 표시 */}
         <button
           onClick={() => scrollToWeek('right')}
-          className="hidden sm:flex absolute right-0 top-1/2 -translate-y-1/2 z-10 w-10 h-10 items-center justify-center bg-white shadow-lg rounded-full hover:shadow-xl transition-shadow"
+          className="hidden sm:flex absolute right-4 top-1/2 -translate-y-1/2 z-20 w-10 h-10 items-center justify-center bg-white shadow-lg rounded-full hover:shadow-xl transition-shadow"
           style={{ color: '#EC407A' }}
         >
           <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -237,7 +234,7 @@ export const WeeklyInfo: React.FC<WeeklyInfoProps> = ({ currentWeek }) => {
       </div>
 
       {/* 정보 카드들 */}
-      <div className="space-y-4">
+      <div className="space-y-4 sm:px-24 px-0">
         {/* 첫 번째 하얀 카드 */}
         <Card className="p-6">
           <h3 
@@ -318,7 +315,7 @@ export const WeeklyInfo: React.FC<WeeklyInfoProps> = ({ currentWeek }) => {
       </div>
 
       {/* 공유하기 버튼 */}
-      <div className="flex justify-center">
+      <div className="flex justify-center sm:px-24 px-0">
         <ShareButton />
       </div>
     </div>

@@ -112,11 +112,14 @@ svg:focus {
   outline: none !important;
 }
 
-/* 주수 슬라이더 스크롤바 숨기기 - 웹에서만 */
+/* 주수 슬라이더 - 웹에서는 드래그만, 스크롤 완전 제거 */
 @media (min-width: 640px) {
   .week-slider-container {
     -ms-overflow-style: none;  /* IE and Edge */
     scrollbar-width: none;  /* Firefox */
+    overflow-x: hidden !important;  /* 기본 스크롤 강제 비활성화 */
+    scroll-behavior: auto !important;  /* smooth 스크롤 비활성화 */
+    -webkit-overflow-scrolling: auto !important;  /* 터치 스크롤 비활성화 */
   }
   
   .week-slider-container::-webkit-scrollbar {
@@ -124,11 +127,14 @@ svg:focus {
   }
 }
 
-/* 모바일에서는 스크롤바 표시 */
+/* 모바일에서는 기본 스크롤만 */
 @media (max-width: 639px) {
   .week-slider-container {
     -ms-overflow-style: auto;
     scrollbar-width: thin;
+    overflow-x: auto;
+    scroll-behavior: smooth;
+    -webkit-overflow-scrolling: touch;
   }
   
   .week-slider-container::-webkit-scrollbar {

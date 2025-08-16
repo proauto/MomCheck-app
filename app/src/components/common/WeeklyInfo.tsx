@@ -120,6 +120,7 @@ export const WeeklyInfo: React.FC<WeeklyInfoProps> = ({ currentWeek }) => {
       isDown = true;
       slider.style.cursor = 'grabbing';
       slider.style.userSelect = 'none';
+      slider.style.overflowX = 'hidden'; // 드래그 중 브라우저 스크롤 완전 차단
       startX = e.pageX - slider.offsetLeft;
       scrollLeft = slider.scrollLeft;
     };
@@ -128,12 +129,14 @@ export const WeeklyInfo: React.FC<WeeklyInfoProps> = ({ currentWeek }) => {
       isDown = false;
       slider.style.cursor = 'grab';
       slider.style.userSelect = '';
+      slider.style.overflowX = 'hidden'; // 웹에서는 계속 hidden 유지
     };
 
     const handleMouseUp = () => {
       isDown = false;
       slider.style.cursor = 'grab';
       slider.style.userSelect = '';
+      slider.style.overflowX = 'hidden'; // 웹에서는 계속 hidden 유지
     };
 
     const handleMouseMove = (e: MouseEvent) => {
@@ -196,9 +199,13 @@ export const WeeklyInfo: React.FC<WeeklyInfoProps> = ({ currentWeek }) => {
           ref={sliderRef}
           className="overflow-x-auto sm:mx-12 mx-0 week-slider-container"
           style={{ 
-            WebkitOverflowScrolling: 'touch',
-            scrollBehavior: 'smooth',
-            cursor: typeof window !== 'undefined' && window.innerWidth >= 640 ? 'grab' : 'auto'
+            // 모바일용 설정 (앱에서만)
+            WebkitOverflowScrolling: typeof window !== 'undefined' && window.innerWidth < 640 ? 'touch' : 'auto',
+            // 웹에서는 드래그 중 스크롤 비활성화
+            scrollBehavior: typeof window !== 'undefined' && window.innerWidth >= 640 ? 'auto' : 'smooth',
+            cursor: typeof window !== 'undefined' && window.innerWidth >= 640 ? 'grab' : 'auto',
+            // 웹에서는 기본 스크롤 완전 비활성화
+            overflowX: typeof window !== 'undefined' && window.innerWidth >= 640 ? 'hidden' : 'auto'
           }}
         >
           <div className="flex space-x-1 sm:space-x-2 py-2" style={{ minWidth: 'max-content' }}>

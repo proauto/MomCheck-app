@@ -71,95 +71,117 @@ export const WeeklyInfo: React.FC<WeeklyInfoProps> = ({ currentWeek }) => {
   };
 
   const scrollToWeek = (direction: 'left' | 'right') => {
-    if (!sliderRef.current) return;
+    if (!sliderRef.current || typeof window === 'undefined') return;
     
     const container = sliderRef.current;
-    const buttonWidth = window.innerWidth >= 640 ? 56 : 48; // sm에서는 56px (w-12 + space-x-2), 모바일에서는 48px (w-11 + space-x-1)
-    const scrollAmount = buttonWidth * 3; // 3개 버튼만큼 스크롤
-    const currentScroll = container.scrollLeft;
-    const maxScroll = container.scrollWidth - container.clientWidth;
+    const buttonWidth = window.innerWidth >= 640 ? 56 : 48;
+    const scrollAmount = buttonWidth * 3;
     
-    let newScrollPosition;
-    if (direction === 'right') {
-      newScrollPosition = Math.min(currentScroll + scrollAmount, maxScroll);
-    } else {
-      newScrollPosition = Math.max(currentScroll - scrollAmount, 0);
-    }
-    
-    // CSS smooth scroll 제거하고 직접 애니메이션
-    container.style.scrollBehavior = 'auto';
-    container.scrollTo({
-      left: newScrollPosition,
-      behavior: 'smooth'
-    });
-    
-    // 애니메이션 후 CSS smooth scroll 복원
-    setTimeout(() => {
-      if (container) {
-        container.style.scrollBehavior = 'smooth';
+    if (window.innerWidth >= 640) {
+      // 웹: transform 기반
+      const maxTranslate = Math.min(0, -(container.scrollWidth - container.clientWidth));
+      let newTranslateX = translateX;
+      
+      if (direction === 'right') {
+        newTranslateX = Math.max(maxTranslate, translateX - scrollAmount);
+      } else {
+        newTranslateX = Math.min(0, translateX + scrollAmount);
       }
-    }, 300);
+      
+      setTranslateX(newTranslateX);
+      
+      const content = container.querySelector('.week-slider-content') as HTMLElement;
+      if (content) {
+        content.style.transform = `translateX(${newTranslateX}px)`;
+        content.style.transition = 'transform 0.3s ease';
+      }
+    } else {
+      // 모바일: 기존 scrollLeft 방식 유지
+      const currentScroll = container.scrollLeft;
+      const maxScroll = container.scrollWidth - container.clientWidth;
+      
+      let newScrollPosition;
+      if (direction === 'right') {
+        newScrollPosition = Math.min(currentScroll + scrollAmount, maxScroll);
+      } else {
+        newScrollPosition = Math.max(currentScroll - scrollAmount, 0);
+      }
+      
+      container.scrollTo({
+        left: newScrollPosition,
+        behavior: 'smooth'
+      });
+    }
   };
 
-  // 네이티브 드래그 스크롤 효과 구현 (웹에서만)
+  // CSS Transform 기반 드래그 구현 (웹에서만)
+  const [translateX, setTranslateX] = useState(0);
+  const [isDragging, setIsDragging] = useState(false);
+  
   useEffect(() => {
-    const slider = sliderRef.current;
-    if (!slider || typeof window === 'undefined' || window.innerWidth < 640) return;
+    if (typeof window === 'undefined' || window.innerWidth < 640) return;
 
-    let isDown = false;
+    const slider = sliderRef.current;
+    if (!slider) return;
+
     let startX = 0;
-    let scrollLeft = 0;
+    let startTranslateX = 0;
+    let animationId: number;
+
+    const updateTransform = (newTranslateX: number) => {
+      const maxTranslate = Math.min(0, -(slider.scrollWidth - slider.clientWidth));
+      const clampedTranslate = Math.max(maxTranslate, Math.min(0, newTranslateX));
+      setTranslateX(clampedTranslate);
+      
+      const content = slider.querySelector('.week-slider-content') as HTMLElement;
+      if (content) {
+        content.style.transform = `translateX(${clampedTranslate}px)`;
+        content.style.transition = isDragging ? 'none' : 'transform 0.3s ease';
+      }
+    };
 
     const handleMouseDown = (e: MouseEvent) => {
-      // 버튼 클릭은 무시
       const target = e.target as HTMLElement;
-      if (target.tagName === 'BUTTON' || target.closest('button')) {
-        return;
-      }
+      if (target.tagName === 'BUTTON' || target.closest('button')) return;
 
-      isDown = true;
+      setIsDragging(true);
+      startX = e.clientX;
+      startTranslateX = translateX;
       slider.style.cursor = 'grabbing';
-      slider.style.userSelect = 'none';
-      slider.style.overflowX = 'hidden'; // 드래그 중 브라우저 스크롤 완전 차단
-      startX = e.pageX - slider.offsetLeft;
-      scrollLeft = slider.scrollLeft;
-    };
-
-    const handleMouseLeave = () => {
-      isDown = false;
-      slider.style.cursor = 'grab';
-      slider.style.userSelect = '';
-      slider.style.overflowX = 'hidden'; // 웹에서는 계속 hidden 유지
-    };
-
-    const handleMouseUp = () => {
-      isDown = false;
-      slider.style.cursor = 'grab';
-      slider.style.userSelect = '';
-      slider.style.overflowX = 'hidden'; // 웹에서는 계속 hidden 유지
+      
+      if (animationId) cancelAnimationFrame(animationId);
     };
 
     const handleMouseMove = (e: MouseEvent) => {
-      if (!isDown) return;
+      if (!isDragging) return;
+      
       e.preventDefault();
-      const x = e.pageX - slider.offsetLeft;
-      const walk = (x - startX) * 2;
-      slider.scrollLeft = scrollLeft - walk;
+      const deltaX = e.clientX - startX;
+      const newTranslateX = startTranslateX + deltaX;
+      
+      animationId = requestAnimationFrame(() => updateTransform(newTranslateX));
     };
 
-    // 네이티브 이벤트 리스너 등록
+    const handleMouseUp = () => {
+      setIsDragging(false);
+      slider.style.cursor = 'grab';
+    };
+
+    // 전역 이벤트로 드래그 추적
+    const handleGlobalMouseMove = (e: MouseEvent) => handleMouseMove(e);
+    const handleGlobalMouseUp = () => handleMouseUp();
+
     slider.addEventListener('mousedown', handleMouseDown);
-    slider.addEventListener('mouseleave', handleMouseLeave);
-    slider.addEventListener('mouseup', handleMouseUp);
-    slider.addEventListener('mousemove', handleMouseMove);
+    document.addEventListener('mousemove', handleGlobalMouseMove);
+    document.addEventListener('mouseup', handleGlobalMouseUp);
 
     return () => {
       slider.removeEventListener('mousedown', handleMouseDown);
-      slider.removeEventListener('mouseleave', handleMouseLeave);
-      slider.removeEventListener('mouseup', handleMouseUp);
-      slider.removeEventListener('mousemove', handleMouseMove);
+      document.removeEventListener('mousemove', handleGlobalMouseMove);
+      document.removeEventListener('mouseup', handleGlobalMouseUp);
+      if (animationId) cancelAnimationFrame(animationId);
     };
-  }, []);
+  }, [translateX, isDragging]);
 
   return (
     <div className="space-y-xl sm:px-24 px-0">
@@ -208,7 +230,14 @@ export const WeeklyInfo: React.FC<WeeklyInfoProps> = ({ currentWeek }) => {
             overflowX: typeof window !== 'undefined' && window.innerWidth >= 640 ? 'hidden' : 'auto'
           }}
         >
-          <div className="flex space-x-1 sm:space-x-2 py-2" style={{ minWidth: 'max-content' }}>
+          <div 
+            className="week-slider-content flex space-x-1 sm:space-x-2 py-2" 
+            style={{ 
+              minWidth: 'max-content',
+              transform: typeof window !== 'undefined' && window.innerWidth >= 640 ? `translateX(${translateX}px)` : 'none',
+              transition: typeof window !== 'undefined' && window.innerWidth >= 640 && !isDragging ? 'transform 0.3s ease' : 'none'
+            }}
+          >
             {weeks.map(week => (
               <button
                 key={week}

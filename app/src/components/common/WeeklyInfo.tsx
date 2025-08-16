@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { Card } from '../layout/Card';
 import { ShareButton } from './ShareButton';
 import { 
@@ -17,9 +17,6 @@ export const WeeklyInfo: React.FC<WeeklyInfoProps> = ({ currentWeek }) => {
   const [weeklyData, setWeeklyData] = useState<WeeklyData[]>([]);
   const [loading, setLoading] = useState(false);
   const sliderRef = useRef<HTMLDivElement>(null);
-  const [isDragging, setIsDragging] = useState(false);
-  const [startX, setStartX] = useState(0);
-  const [scrollLeft, setScrollLeft] = useState(0);
   
   // 마크다운 파일에서 데이터 로드
   useEffect(() => {
@@ -104,60 +101,54 @@ export const WeeklyInfo: React.FC<WeeklyInfoProps> = ({ currentWeek }) => {
     }, 300);
   };
 
-  // 드래그 스크롤 이벤트 핸들러들 (웹에서만 작동)
-  const handleMouseDown = (e: React.MouseEvent) => {
-    if (!sliderRef.current || window.innerWidth < 640) return; // 모바일에서는 드래그 비활성화
+  // 드래그 스크롤 기능 (웹에서만, useCallback으로 최적화)
+  const handleMouseDown = useCallback((e: React.MouseEvent) => {
+    if (!sliderRef.current || typeof window === 'undefined' || window.innerWidth < 640) return;
     
-    // 버튼 클릭 무시
+    // 버튼 클릭은 무시
     const target = e.target as HTMLElement;
     if (target.tagName === 'BUTTON' || target.closest('button')) {
       return;
     }
     
-    setIsDragging(true);
-    const rect = sliderRef.current.getBoundingClientRect();
-    setStartX(e.clientX - rect.left);
-    setScrollLeft(sliderRef.current.scrollLeft);
-    sliderRef.current.style.cursor = 'grabbing';
-    sliderRef.current.style.scrollBehavior = 'auto'; // 드래그 중 smooth scroll 비활성화
+    const slider = sliderRef.current;
+    const rect = slider.getBoundingClientRect();
+    const startX = e.clientX - rect.left;
+    const startScrollLeft = slider.scrollLeft;
     
-    // 전역 이벤트 리스너 추가
-    document.addEventListener('mousemove', handleGlobalMouseMove);
-    document.addEventListener('mouseup', handleGlobalMouseUp);
-  };
-
-  const handleGlobalMouseMove = (e: MouseEvent) => {
-    if (!isDragging || !sliderRef.current) return;
+    // 드래그 상태 플래그 (ref 사용으로 클로저 문제 해결)
+    const dragState = { isDragging: true };
     
-    e.preventDefault();
-    const rect = sliderRef.current.getBoundingClientRect();
-    const x = e.clientX - rect.left;
-    const walk = (x - startX) * 2; // 드래그 반응성 개선
-    const newScrollLeft = scrollLeft - walk;
+    slider.style.cursor = 'grabbing';
+    slider.style.scrollBehavior = 'auto';
+    slider.style.userSelect = 'none';
     
-    // 스크롤 범위 제한
-    const maxScroll = sliderRef.current.scrollWidth - sliderRef.current.clientWidth;
-    sliderRef.current.scrollLeft = Math.max(0, Math.min(newScrollLeft, maxScroll));
-  };
-
-  const handleGlobalMouseUp = () => {
-    if (sliderRef.current) {
-      sliderRef.current.style.scrollBehavior = 'smooth';
-      sliderRef.current.style.cursor = 'grab';
-    }
-    setIsDragging(false);
-    
-    // 전역 이벤트 리스너 제거
-    document.removeEventListener('mousemove', handleGlobalMouseMove);
-    document.removeEventListener('mouseup', handleGlobalMouseUp);
-  };
-
-  // 컴포넌트 언마운트 시 이벤트 리스너 정리
-  useEffect(() => {
-    return () => {
-      document.removeEventListener('mousemove', handleGlobalMouseMove);
-      document.removeEventListener('mouseup', handleGlobalMouseUp);
+    const handleMouseMove = (moveEvent: MouseEvent) => {
+      if (!dragState.isDragging || !slider) return;
+      
+      moveEvent.preventDefault();
+      const rect = slider.getBoundingClientRect();
+      const x = moveEvent.clientX - rect.left;
+      const walk = (x - startX) * 2;
+      const newScrollLeft = startScrollLeft - walk;
+      
+      const maxScroll = slider.scrollWidth - slider.clientWidth;
+      slider.scrollLeft = Math.max(0, Math.min(newScrollLeft, maxScroll));
     };
+    
+    const handleMouseUp = () => {
+      dragState.isDragging = false;
+      if (slider) {
+        slider.style.cursor = 'grab';
+        slider.style.scrollBehavior = 'smooth';
+        slider.style.userSelect = '';
+      }
+      document.removeEventListener('mousemove', handleMouseMove);
+      document.removeEventListener('mouseup', handleMouseUp);
+    };
+    
+    document.addEventListener('mousemove', handleMouseMove);
+    document.addEventListener('mouseup', handleMouseUp);
   }, []);
 
   return (
@@ -199,8 +190,8 @@ export const WeeklyInfo: React.FC<WeeklyInfoProps> = ({ currentWeek }) => {
           className="overflow-x-auto sm:mx-12 mx-0 week-slider-container"
           style={{ 
             WebkitOverflowScrolling: 'touch',
-            scrollBehavior: isDragging ? 'auto' : 'smooth',
-            cursor: typeof window !== 'undefined' && window.innerWidth >= 640 ? (isDragging ? 'grabbing' : 'grab') : 'auto'
+            scrollBehavior: 'smooth',
+            cursor: typeof window !== 'undefined' && window.innerWidth >= 640 ? 'grab' : 'auto'
           }}
           onMouseDown={handleMouseDown}
         >

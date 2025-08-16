@@ -74,57 +74,80 @@ export const WeeklyInfo: React.FC<WeeklyInfoProps> = ({ currentWeek }) => {
   };
 
   const scrollToWeek = (direction: 'left' | 'right') => {
-    const container = document.getElementById('week-slider');
-    if (container) {
-      const buttonWidth = 52; // 버튼 너비 + 간격 (48px + 4px)
-      const visibleButtons = Math.floor(container.clientWidth / buttonWidth);
-      const scrollAmount = buttonWidth * Math.max(1, visibleButtons - 1); // 최소 1개, 최대 보이는 버튼 수 - 1개만큼 이동
-      const currentScroll = container.scrollLeft;
-      const maxScroll = container.scrollWidth - container.clientWidth;
-      
-      let newScrollPosition;
-      if (direction === 'right') {
-        newScrollPosition = Math.min(currentScroll + scrollAmount, maxScroll);
-      } else {
-        newScrollPosition = Math.max(currentScroll - scrollAmount, 0);
-      }
-      
-      container.scrollTo({
-        left: newScrollPosition,
-        behavior: 'smooth'
-      });
+    if (!sliderRef.current) return;
+    
+    const container = sliderRef.current;
+    const buttonWidth = window.innerWidth >= 640 ? 56 : 48; // sm에서는 56px (w-12 + space-x-2), 모바일에서는 48px (w-11 + space-x-1)
+    const scrollAmount = buttonWidth * 3; // 3개 버튼만큼 스크롤
+    const currentScroll = container.scrollLeft;
+    const maxScroll = container.scrollWidth - container.clientWidth;
+    
+    let newScrollPosition;
+    if (direction === 'right') {
+      newScrollPosition = Math.min(currentScroll + scrollAmount, maxScroll);
+    } else {
+      newScrollPosition = Math.max(currentScroll - scrollAmount, 0);
     }
+    
+    // CSS smooth scroll 제거하고 직접 애니메이션
+    container.style.scrollBehavior = 'auto';
+    container.scrollTo({
+      left: newScrollPosition,
+      behavior: 'smooth'
+    });
+    
+    // 애니메이션 후 CSS smooth scroll 복원
+    setTimeout(() => {
+      if (container) {
+        container.style.scrollBehavior = 'smooth';
+      }
+    }, 300);
   };
 
-  // 드래그 스크롤 이벤트 핸들러들
+  // 드래그 스크롤 이벤트 핸들러들 (웹에서만 작동)
   const handleMouseDown = (e: React.MouseEvent) => {
-    if (!sliderRef.current) return;
+    if (!sliderRef.current || window.innerWidth < 640) return; // 모바일에서는 드래그 비활성화
+    
     setIsDragging(true);
-    setStartX(e.pageX - sliderRef.current.offsetLeft);
+    const rect = sliderRef.current.getBoundingClientRect();
+    setStartX(e.clientX - rect.left);
     setScrollLeft(sliderRef.current.scrollLeft);
     sliderRef.current.style.cursor = 'grabbing';
+    sliderRef.current.style.scrollBehavior = 'auto'; // 드래그 중 smooth scroll 비활성화
   };
 
   const handleMouseLeave = () => {
+    if (isDragging && sliderRef.current) {
+      sliderRef.current.style.scrollBehavior = 'smooth';
+    }
     setIsDragging(false);
-    if (sliderRef.current) {
+    if (sliderRef.current && window.innerWidth >= 640) {
       sliderRef.current.style.cursor = 'grab';
     }
   };
 
   const handleMouseUp = () => {
-    setIsDragging(false);
     if (sliderRef.current) {
+      sliderRef.current.style.scrollBehavior = 'smooth';
+    }
+    setIsDragging(false);
+    if (sliderRef.current && window.innerWidth >= 640) {
       sliderRef.current.style.cursor = 'grab';
     }
   };
 
   const handleMouseMove = (e: React.MouseEvent) => {
-    if (!isDragging || !sliderRef.current) return;
+    if (!isDragging || !sliderRef.current || window.innerWidth < 640) return;
+    
     e.preventDefault();
-    const x = e.pageX - sliderRef.current.offsetLeft;
-    const walk = (x - startX) * 1.5; // 드래그 속도 조절
-    sliderRef.current.scrollLeft = scrollLeft - walk;
+    const rect = sliderRef.current.getBoundingClientRect();
+    const x = e.clientX - rect.left;
+    const walk = (x - startX) * 2; // 드래그 반응성 개선
+    const newScrollLeft = scrollLeft - walk;
+    
+    // 스크롤 범위 제한
+    const maxScroll = sliderRef.current.scrollWidth - sliderRef.current.clientWidth;
+    sliderRef.current.scrollLeft = Math.max(0, Math.min(newScrollLeft, maxScroll));
   };
 
   return (
@@ -166,8 +189,8 @@ export const WeeklyInfo: React.FC<WeeklyInfoProps> = ({ currentWeek }) => {
           className="overflow-x-auto sm:mx-12 mx-0 week-slider-container"
           style={{ 
             WebkitOverflowScrolling: 'touch',
-            scrollBehavior: 'smooth',
-            cursor: typeof window !== 'undefined' && window.innerWidth >= 640 ? 'grab' : 'auto'
+            scrollBehavior: isDragging ? 'auto' : 'smooth',
+            cursor: typeof window !== 'undefined' && window.innerWidth >= 640 ? (isDragging ? 'grabbing' : 'grab') : 'auto'
           }}
           onMouseDown={handleMouseDown}
           onMouseLeave={handleMouseLeave}

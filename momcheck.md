@@ -411,3 +411,110 @@ plugins: [
 
 이 프로젝트는 v3.4.17에서 완벽하게 작동하도록 구성되어 있음.
 
+## 🎯 주수별 맞춤정보 페이지 스크롤 기능 구현 완료
+
+### 기능 요구사항
+- **웹**: 주수 버튼(4~40주)을 좌우 드래그 + 화살표 버튼으로 스크롤
+- **앱**: 기존 터치 스크롤 유지 (변경 없음)
+- **공통**: 스크롤바 숨김 처리
+
+### 해결한 주요 문제들
+
+#### 1. 상위 컨테이너 스크롤 차단 이슈
+**문제**: WeeklyInfoPage에서 `overflow-x-hidden`으로 수평 스크롤 완전 차단
+```tsx
+// 문제가 된 코드
+<div className="overflow-x-hidden"> // ← 스크롤 차단
+<div className="overflow-x-hidden"> // ← 이중 차단
+```
+**해결**: 상위 컨테이너에서 `overflow-x-hidden` 제거
+
+#### 2. 레이아웃 구조 문제
+**문제**: 이중 패딩으로 인한 화살표 위치 오류 및 스크롤 영역 축소
+- 페이지 레벨: `px-lg` (16px)
+- 컴포넌트 레벨: `sm:px-24` (96px) 
+- **총 112px 패딩**으로 스크롤 공간 부족
+
+**해결**: 레이아웃 전면 재설계
+```tsx
+// 기존 구조
+<div className="sm:px-24"> // 전체 패딩
+  <h2>제목</h2>
+  <div>슬라이더</div>
+  <div>카드들</div>
+</div>
+
+// 개선된 구조  
+<div>
+  <h2 className="sm:px-24">제목</h2>     // 선택적 패딩
+  <div className="w-full">슬라이더</div>  // 전체 너비 활용
+  <div className="sm:px-24">카드들</div>  // 선택적 패딩
+</div>
+```
+
+#### 3. 드래그 스크롤 기능 구현
+**구현 방식**: 브라우저 네이티브 스크롤 + 스크롤바 숨김
+```tsx
+// 드래그 스크롤 핵심 로직
+const handleMouseDown = (e: MouseEvent) => {
+  // 버튼 클릭은 드래그에서 제외
+  if (target.tagName === 'BUTTON') return;
+  
+  isDown = true;
+  startX = e.pageX - slider.offsetLeft;
+  scrollLeft = slider.scrollLeft;
+};
+
+const handleMouseMove = (e: MouseEvent) => {
+  if (!isDown) return;
+  const x = e.pageX - slider.offsetLeft;
+  const walk = (x - startX) * 2; // 2배 민감도
+  slider.scrollLeft = scrollLeft - walk;
+};
+```
+
+#### 4. CSS 스크롤바 숨김 처리
+```css
+/* 웹에서 스크롤바 숨김 */
+.week-slider-container {
+  -ms-overflow-style: none;  /* IE/Edge */
+  scrollbar-width: none;     /* Firefox */
+}
+.week-slider-container::-webkit-scrollbar {
+  display: none;             /* Chrome/Safari */
+}
+```
+
+### 최종 구현 결과
+
+#### 웹 (640px 이상)
+- ✅ **마우스 드래그** 스크롤
+- ✅ **화살표 버튼** (3버튼씩 스크롤)
+- ✅ **마우스 휠** 스크롤 (브라우저 기본)
+- ✅ **스크롤바 숨김**
+- ✅ **grab/grabbing 커서** 변경
+
+#### 모바일/앱 (640px 미만)  
+- ✅ **터치 스크롤** (기존과 동일)
+- ✅ **아무 변화 없음** (요구사항 준수)
+
+### 핵심 설계 원칙
+
+1. **브라우저 네이티브 활용**: 복잡한 커스텀 스크롤 대신 네이티브 scroll 사용
+2. **반응형 분리**: 웹과 모바일 동작을 명확히 분리
+3. **레이아웃 최적화**: 스크롤 영역은 최대 너비, 다른 요소만 패딩 적용
+4. **점진적 개선**: 기본 스크롤 동작 유지하면서 UX 향상
+
+### 파일 구조
+```
+src/components/common/WeeklyInfo.tsx  // 주요 구현
+src/pages/WeeklyInfoPage.tsx          // 레이아웃 수정
+src/index.css                         // 스크롤바 숨김 CSS
+```
+
+### 성능 최적화
+- 네이티브 스크롤 엔진 활용으로 60fps 보장
+- 하드웨어 가속 자동 적용
+- 메모리 누수 방지 (이벤트 리스너 정리)
+- 크로스 브라우저 호환성 확보
+

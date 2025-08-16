@@ -93,6 +93,62 @@ export const WeeklyInfo: React.FC<WeeklyInfoProps> = ({ currentWeek }) => {
     });
   };
 
+  // 드래그 스크롤 기능 (웹에서만)
+  useEffect(() => {
+    const slider = sliderRef.current;
+    if (!slider || typeof window === 'undefined' || window.innerWidth < 640) return;
+
+    let isDown = false;
+    let startX = 0;
+    let scrollLeft = 0;
+
+    const handleMouseDown = (e: MouseEvent) => {
+      // 버튼 클릭은 무시
+      const target = e.target as HTMLElement;
+      if (target.tagName === 'BUTTON' || target.closest('button')) {
+        return;
+      }
+
+      isDown = true;
+      slider.style.cursor = 'grabbing';
+      slider.style.userSelect = 'none';
+      startX = e.pageX - slider.offsetLeft;
+      scrollLeft = slider.scrollLeft;
+    };
+
+    const handleMouseLeave = () => {
+      isDown = false;
+      slider.style.cursor = 'grab';
+      slider.style.userSelect = '';
+    };
+
+    const handleMouseUp = () => {
+      isDown = false;
+      slider.style.cursor = 'grab';
+      slider.style.userSelect = '';
+    };
+
+    const handleMouseMove = (e: MouseEvent) => {
+      if (!isDown) return;
+      e.preventDefault();
+      const x = e.pageX - slider.offsetLeft;
+      const walk = (x - startX) * 2;
+      slider.scrollLeft = scrollLeft - walk;
+    };
+
+    slider.addEventListener('mousedown', handleMouseDown);
+    slider.addEventListener('mouseleave', handleMouseLeave);
+    slider.addEventListener('mouseup', handleMouseUp);
+    slider.addEventListener('mousemove', handleMouseMove);
+
+    return () => {
+      slider.removeEventListener('mousedown', handleMouseDown);
+      slider.removeEventListener('mouseleave', handleMouseLeave);
+      slider.removeEventListener('mouseup', handleMouseUp);
+      slider.removeEventListener('mousemove', handleMouseMove);
+    };
+  }, []);
+
   return (
     <div className="space-y-xl sm:px-24 px-0">
       {/* 제목 */}
@@ -129,14 +185,19 @@ export const WeeklyInfo: React.FC<WeeklyInfoProps> = ({ currentWeek }) => {
         <div 
           id="week-slider"
           ref={sliderRef}
-          className="overflow-x-auto sm:mx-12 mx-0 week-slider-container"
+          className="overflow-x-auto sm:mx-16 mx-0 week-slider-container"
           style={{ 
             WebkitOverflowScrolling: 'touch',
             scrollBehavior: 'smooth',
             // 명시적 스크롤 활성화
             overflowX: 'auto',
             display: 'block',
-            width: '100%'
+            width: '100%',
+            // 화살표 버튼을 위한 패딩
+            paddingLeft: typeof window !== 'undefined' && window.innerWidth >= 640 ? '48px' : '0',
+            paddingRight: typeof window !== 'undefined' && window.innerWidth >= 640 ? '48px' : '0',
+            // 웹에서 드래그 커서
+            cursor: typeof window !== 'undefined' && window.innerWidth >= 640 ? 'grab' : 'auto'
           }}
         >
           <div className="flex space-x-1 sm:space-x-2 py-2" style={{ minWidth: 'max-content' }}>

@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef, useCallback } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Card } from '../layout/Card';
 import { ShareButton } from './ShareButton';
 import { 
@@ -101,54 +101,61 @@ export const WeeklyInfo: React.FC<WeeklyInfoProps> = ({ currentWeek }) => {
     }, 300);
   };
 
-  // 드래그 스크롤 기능 (웹에서만, useCallback으로 최적화)
-  const handleMouseDown = useCallback((e: React.MouseEvent) => {
-    if (!sliderRef.current || typeof window === 'undefined' || window.innerWidth < 640) return;
-    
-    // 버튼 클릭은 무시
-    const target = e.target as HTMLElement;
-    if (target.tagName === 'BUTTON' || target.closest('button')) {
-      return;
-    }
-    
+  // 네이티브 드래그 스크롤 효과 구현 (웹에서만)
+  useEffect(() => {
     const slider = sliderRef.current;
-    const rect = slider.getBoundingClientRect();
-    const startX = e.clientX - rect.left;
-    const startScrollLeft = slider.scrollLeft;
-    
-    // 드래그 상태 플래그 (ref 사용으로 클로저 문제 해결)
-    const dragState = { isDragging: true };
-    
-    slider.style.cursor = 'grabbing';
-    slider.style.scrollBehavior = 'auto';
-    slider.style.userSelect = 'none';
-    
-    const handleMouseMove = (moveEvent: MouseEvent) => {
-      if (!dragState.isDragging || !slider) return;
-      
-      moveEvent.preventDefault();
-      const rect = slider.getBoundingClientRect();
-      const x = moveEvent.clientX - rect.left;
-      const walk = (x - startX) * 2;
-      const newScrollLeft = startScrollLeft - walk;
-      
-      const maxScroll = slider.scrollWidth - slider.clientWidth;
-      slider.scrollLeft = Math.max(0, Math.min(newScrollLeft, maxScroll));
-    };
-    
-    const handleMouseUp = () => {
-      dragState.isDragging = false;
-      if (slider) {
-        slider.style.cursor = 'grab';
-        slider.style.scrollBehavior = 'smooth';
-        slider.style.userSelect = '';
+    if (!slider || typeof window === 'undefined' || window.innerWidth < 640) return;
+
+    let isDown = false;
+    let startX = 0;
+    let scrollLeft = 0;
+
+    const handleMouseDown = (e: MouseEvent) => {
+      // 버튼 클릭은 무시
+      const target = e.target as HTMLElement;
+      if (target.tagName === 'BUTTON' || target.closest('button')) {
+        return;
       }
-      document.removeEventListener('mousemove', handleMouseMove);
-      document.removeEventListener('mouseup', handleMouseUp);
+
+      isDown = true;
+      slider.style.cursor = 'grabbing';
+      slider.style.userSelect = 'none';
+      startX = e.pageX - slider.offsetLeft;
+      scrollLeft = slider.scrollLeft;
     };
-    
-    document.addEventListener('mousemove', handleMouseMove);
-    document.addEventListener('mouseup', handleMouseUp);
+
+    const handleMouseLeave = () => {
+      isDown = false;
+      slider.style.cursor = 'grab';
+      slider.style.userSelect = '';
+    };
+
+    const handleMouseUp = () => {
+      isDown = false;
+      slider.style.cursor = 'grab';
+      slider.style.userSelect = '';
+    };
+
+    const handleMouseMove = (e: MouseEvent) => {
+      if (!isDown) return;
+      e.preventDefault();
+      const x = e.pageX - slider.offsetLeft;
+      const walk = (x - startX) * 2;
+      slider.scrollLeft = scrollLeft - walk;
+    };
+
+    // 네이티브 이벤트 리스너 등록
+    slider.addEventListener('mousedown', handleMouseDown);
+    slider.addEventListener('mouseleave', handleMouseLeave);
+    slider.addEventListener('mouseup', handleMouseUp);
+    slider.addEventListener('mousemove', handleMouseMove);
+
+    return () => {
+      slider.removeEventListener('mousedown', handleMouseDown);
+      slider.removeEventListener('mouseleave', handleMouseLeave);
+      slider.removeEventListener('mouseup', handleMouseUp);
+      slider.removeEventListener('mousemove', handleMouseMove);
+    };
   }, []);
 
   return (
@@ -193,7 +200,6 @@ export const WeeklyInfo: React.FC<WeeklyInfoProps> = ({ currentWeek }) => {
             scrollBehavior: 'smooth',
             cursor: typeof window !== 'undefined' && window.innerWidth >= 640 ? 'grab' : 'auto'
           }}
-          onMouseDown={handleMouseDown}
         >
           <div className="flex space-x-1 sm:space-x-2 py-2" style={{ minWidth: 'max-content' }}>
             {weeks.map(week => (
